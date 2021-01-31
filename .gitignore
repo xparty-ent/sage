@@ -1,5 +1,6 @@
+.env
 /node_modules
 /vendor
-/public
+/dist
 npm-debug.log
 yarn-error.log

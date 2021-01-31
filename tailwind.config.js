@@ -1,7 +1,8 @@
 module.exports = {
   purge: {
     content: [
-      './**/*.php',
+      './app/**/*.php',
+      './resources/**/*.php',
       './resources/**/*.vue',
       './resources/**/*.js',
       './resources/**/*.json',

@@ -1,0 +1,39 @@
+{
+  "app": {
+    "version": "5ec46f4057e002cc3700",
+    "js": [
+      "/wp-content/themes/sage/public/runtime/app.5ec46f4057e002cc3700.js",
+      "/wp-content/themes/sage/public/vendor/harmony-module.5ec46f4057e002cc3700.js",
+      "/wp-content/themes/sage/public/app.5ec46f4057e002cc3700.js"
+    ],
+    "css": [
+      "/wp-content/themes/sage/public/app.css"
+    ],
+    "dependencies": ["jquery"]
+  },
+  "editor": {
+    "version": "5ec46f4057e002cc3700",
+    "js": [
+      "/wp-content/themes/sage/public/runtime/editor.5ec46f4057e002cc3700.js",
+      "/wp-content/themes/sage/public/vendor/harmony-module.5ec46f4057e002cc3700.js",
+      "/wp-content/themes/sage/public/editor.5ec46f4057e002cc3700.js"
+    ],
+    "css": [
+      "/wp-content/themes/sage/public/editor.css"
+    ],
+    "dependencies": [
+      "wp-dom-ready",
+      "wp-edit-post",
+      "wp-blocks"
+    ]
+  },
+  "customizer": {
+    "version": "5ec46f4057e002cc3700",
+    "js": [
+      "/wp-content/themes/sage/public/runtime/customizer.5ec46f4057e002cc3700.js",
+      "/wp-content/themes/sage/public/customizer.5ec46f4057e002cc3700.js"
+    ],
+    "css": [],
+    "dependencies": []
+  }
+}
