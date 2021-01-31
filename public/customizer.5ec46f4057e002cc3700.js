@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{"1cdf3ab34cc5add6fb62":function(n,c){wp.customize("blogname",(function(n){n.bind((function(n){return $(".brand").text(n)}))}))},2:function(n,c,o){n.exports=o("1cdf3ab34cc5add6fb62")}},[[2,5]]]);
