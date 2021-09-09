@@ -1,8 +1,6 @@
 /**
  * External Dependencies
  */
-import 'jquery';
+import 'my-component';
 
-$(() => {
-  // console.log('Hello world');
-});
+console.log('app.js');

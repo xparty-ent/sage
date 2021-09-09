@@ -8,16 +8,43 @@ namespace App;
 
 use function Roots\asset;
 
+
+function generate_import_map() {
+    $imports = [
+        'external' => [],
+        'directories' => [
+            'scripts/' => get_theme_file_path('resources/scripts'),
+        ],
+    ];
+
+    $import_map = [];
+
+    foreach($imports['directories'] as $path) {
+        foreach(glob($path . "/*.js") as $filename) {
+            $import_map[basename($filename, ".js")] = get_theme_file_uri(str_replace(get_template_directory(), '', $filename));
+        }
+    }
+
+    return json_encode(['imports' => $import_map]);
+};
+
+/**
+[
+  javascript_inline_importmap_tag,
+  javascript_importmap_shim_tag,
+  javascript_import_module_tag(entry_point)
+]
+*/
+
 /**
  * Register the theme assets.
  *
  * @return void
  */
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_script('sage/vendor.js', asset('scripts/vendor.js')->uri(), ['jquery'], null, true);
-    wp_enqueue_script('sage/app.js', asset('scripts/app.js')->uri(), ['sage/vendor.js'], null, true);
-
-    wp_add_inline_script('sage/vendor.js', asset('scripts/manifest.js')->contents(), 'before');
+    wp_print_inline_script_tag(generate_import_map(), ['type' => 'importmap']);
+    wp_print_script_tag(['src' => get_theme_file_uri('/resources/vendor/es-module-shims@0.12.8.js'), 'async' => 'true']);
+    wp_print_inline_script_tag("import 'app'", ['type' => 'module']);
 
     if (is_single() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
