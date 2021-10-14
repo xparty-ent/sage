@@ -6,8 +6,9 @@
 
 namespace App;
 
+use App\AssetPipeline;
+use App\AssetPipeline\Assembly;
 use function Roots\asset;
-
 
 function generate_import_map() {
     $imports = [
@@ -43,7 +44,7 @@ function generate_import_map() {
  */
 add_action('wp_enqueue_scripts', function () {
     wp_print_inline_script_tag(generate_import_map(), ['type' => 'importmap']);
-    wp_print_script_tag(['src' => get_theme_file_uri('/resources/vendor/es-module-shims@0.12.8.js'), 'async' => 'true']);
+    wp_print_script_tag(['src' => assetPath('/vendor/es-module-shims@0.12.8.js'), 'async' => 'true']);
     wp_print_inline_script_tag("import 'app'", ['type' => 'module']);
 
     if (is_single() && comments_open() && get_option('thread_comments')) {
@@ -228,4 +229,39 @@ add_action('widgets_init', function () {
         'name' => __('Footer', 'sage'),
         'id' => 'sidebar-footer'
     ] + $config);
+});
+
+function assetPath(string $logicalPath) {
+    $assembly = \Roots\Acorn\Application::getInstance()->make(Assembly::class);
+    return $assembly->resolver()->resolve($logicalPath);
+}
+
+add_action('parse_request', function($wp) {
+    $path = $wp->request;
+    $digest = null;
+    $assembly = \Roots\Acorn\Application::getInstance()->make(Assembly::class);
+    $prefix = $assembly->config->prefix;
+
+    if (!str_starts_with($wp->request, $prefix . "/")) {
+        return;
+    }
+
+    if (preg_match("/-([0-9a-f]{7,128})\.(?!digested)[^.]+$/", $wp->request, $matches)) {
+        $digest = $matches[1];
+        $path = str_replace("-{$digest}", "", $path);
+    }
+
+
+    $path = str_replace($prefix . "/", "", $path);
+    $asset = $assembly->loadPath()->find("/" . $path);
+
+    if (isset($asset) && $asset->isFresh("{$digest}")) {
+        header("Content-Length: " . $asset->length(), true);
+        header("Content-Type: " . $asset->contentType(), true);
+        header("Accept-Encoding: Vary", true);
+        header("ETag: \"" . $asset->digest() . "\"");
+        header("Cache-Control: public, max-age=31536000, immutable", true);
+        print $asset->content();
+        exit();
+    }
 });

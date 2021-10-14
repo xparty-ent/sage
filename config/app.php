@@ -110,6 +110,12 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'asset_pipeline' => [
+        'paths' => ['resources'],
+        'prefix' => 'assets',
+        'output_path' => 'dist',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -157,6 +163,7 @@ return [
          * Application Service Providers...
          */
         App\Providers\ThemeServiceProvider::class,
+        App\Providers\AssetPipelineProvider::class,
 
     ],
 
