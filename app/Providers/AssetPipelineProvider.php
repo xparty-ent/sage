@@ -19,7 +19,8 @@ class AssetPipelineProvider extends ServiceProvider
             $config = new Config(
                 $app['config']['app.asset_pipeline.paths'],
                 $app['config']['app.asset_pipeline.prefix'],
-                $app['config']['app.asset_pipeline.output_path']
+                $app['config']['app.asset_pipeline.output_path'],
+                $app['config']['app.asset_pipeline.compilers']
             );
 
             return new Assembly($config);

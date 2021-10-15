@@ -51,7 +51,7 @@ add_action('wp_enqueue_scripts', function () {
         wp_enqueue_script('comment-reply');
     }
 
-    wp_enqueue_style('sage/app.css', asset('styles/app.css')->uri(), false, null);
+    wp_enqueue_style('sage/app.css', get_home_url() . assetPath('/styles/app.css'), false, null);
 }, 100);
 
 /**
@@ -237,31 +237,5 @@ function assetPath(string $logicalPath) {
 }
 
 add_action('parse_request', function($wp) {
-    $path = $wp->request;
-    $digest = null;
-    $assembly = \Roots\Acorn\Application::getInstance()->make(Assembly::class);
-    $prefix = $assembly->config->prefix;
-
-    if (!str_starts_with($wp->request, $prefix . "/")) {
-        return;
-    }
-
-    if (preg_match("/-([0-9a-f]{7,128})\.(?!digested)[^.]+$/", $wp->request, $matches)) {
-        $digest = $matches[1];
-        $path = str_replace("-{$digest}", "", $path);
-    }
-
-
-    $path = str_replace($prefix . "/", "", $path);
-    $asset = $assembly->loadPath()->find("/" . $path);
-
-    if (isset($asset) && $asset->isFresh("{$digest}")) {
-        header("Content-Length: " . $asset->length(), true);
-        header("Content-Type: " . $asset->contentType(), true);
-        header("Accept-Encoding: Vary", true);
-        header("ETag: \"" . $asset->digest() . "\"");
-        header("Cache-Control: public, max-age=31536000, immutable", true);
-        print $asset->content();
-        exit();
-    }
+    AssetPipeline\Server::call($wp->request);
 });

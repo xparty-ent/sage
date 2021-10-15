@@ -23,8 +23,25 @@ class Asset
     // TODO: mime_content_type is inaccurate
     public function contentType()
     {
-        //return mime_content_type($this->path);
-        return "application/javascript";
+        if ($this->contentType ?? null) {
+            return $this->contentType;
+        }
+
+        $ext = pathinfo($this->path, PATHINFO_EXTENSION);
+        $contentType = "text/plain";
+
+        switch($ext) {
+        case "js":
+            $contentType = "application/javascript";
+            break;
+        case "css":
+            $contentType = "text/css";
+            break;
+        default:
+            $contentType = mime_content_type($this->path);
+        }
+
+        return $this->contentType = $contentType;
     }
 
     public function isFresh(string $digest)

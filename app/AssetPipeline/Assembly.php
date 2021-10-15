@@ -12,6 +12,24 @@ class Assembly
         $this->config = $config;
     }
 
+    public function compile(Asset $asset)
+    {
+        $content = $asset->content();
+
+        $compilers = $this->config->compilers[$asset->contentType()] ?? null;
+
+        if (!$compilers) {
+            return $asset->content();
+        }
+
+        foreach($compilers as $compilerClassName) {
+            $compiler = new $compilerClassName($this);
+            $content = $compiler->compile($asset->logicalPath, $content);
+        }
+
+        return $content;
+    }
+
     public function loadPath()
     {
         $this->pathLoader ??= new PathLoader($this->config->paths);

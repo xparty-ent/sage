@@ -114,6 +114,9 @@ return [
         'paths' => ['resources'],
         'prefix' => 'assets',
         'output_path' => 'dist',
+        'compilers' => [
+            "text/css" => ["\App\AssetPipeline\Compilers\CssAssetUrls"]
+        ],
     ],
 
     /*
