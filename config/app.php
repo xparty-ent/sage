@@ -113,7 +113,7 @@ return [
     'asset_pipeline' => [
         'paths' => ['resources'],
         'prefix' => 'assets',
-        'output_path' => 'dist',
+        'output_path' => 'public',
         'compilers' => [
             "text/css" => ["\App\AssetPipeline\Compilers\CssAssetUrls"]
         ],

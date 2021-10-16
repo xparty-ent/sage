@@ -43,6 +43,7 @@ class PathLoader
             $it = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
 
             foreach(new \RecursiveIteratorIterator($it) as $file) {
+                // TODO: skip hidden files like `.gitkeep`?
                 // TODO: is this correct always?
                 $logicalPath = str_replace($path, "", $file->getPathname());
                 $mappedAssets[$logicalPath] = new Asset($file->getPathname(), $logicalPath);

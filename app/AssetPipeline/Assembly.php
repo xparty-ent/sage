@@ -4,7 +4,6 @@ namespace App\AssetPipeline;
 
 class Assembly
 {
-    private const MANIFEST_FILENAME = "manifest.json";
     public Config $config;
 
     public function __construct(Config $config)
@@ -12,7 +11,12 @@ class Assembly
         $this->config = $config;
     }
 
-    public function compile(Asset $asset)
+    public function compilableAsset(Asset $asset): bool
+    {
+        return array_key_exists($asset->contentType(), $this->config->compilers);
+    }
+
+    public function compile(Asset $asset): string
     {
         $content = $asset->content();
 
@@ -30,15 +34,20 @@ class Assembly
         return $content;
     }
 
-    public function loadPath()
+    public function loadPath(): PathLoader
     {
         $this->pathLoader ??= new PathLoader($this->config->paths);
         return $this->pathLoader;
     }
 
+    public function processor(): Processor
+    {
+        return new Processor($this);
+    }
+
     public function resolver()
     {
-        $manifestPath = realpath(get_template_directory() . "/" . $this->config->outputPath . "/" . $this::MANIFEST_FILENAME);
+        $manifestPath = $this->config->outputPath . "/" . Processor::MANIFEST_FILENAME;
         if (file_exists($manifestPath)) {
             return new StaticResolver($manifestPath, $this->config->prefix);
         } else {

@@ -9,19 +9,29 @@ class Asset
     public string $path;
     public string $logicalPath;
 
+    private $content;
+    private $contentType;
+    private $length;
+    private $digest;
+    private $digestedPath;
+
     public function __construct(string $path, string $logicalPath)
     {
         $this->path = $path;
         $this->logicalPath = $logicalPath;
     }
 
-    public function content()
+    public function content(): string
     {
-        return file_get_contents($this->path);
+        if ($this->content) {
+            return $this->content;
+        }
+
+        return $this->content = file_get_contents($this->path);
     }
 
     // TODO: mime_content_type is inaccurate
-    public function contentType()
+    public function contentType(): string
     {
         if ($this->contentType ?? null) {
             return $this->contentType;
@@ -44,32 +54,46 @@ class Asset
         return $this->contentType = $contentType;
     }
 
-    public function isFresh(string $digest)
+    public function isFresh(string $digest): bool
     {
         return $this->digest() === $digest || $this->alreadyDigested();
     }
 
-    public function length()
+    public function length(): int
     {
-        return filesize($this->path);
-    }
-
-    public function digest()
-    {
-        return sha1_file($this->path);
-    }
-
-    public function digestedPath()
-    {
-        if ($this->alreadyDigested()) {
-            return $this->logicalPath;
-        } else {
-            return preg_replace("/\.(\w+)$/", "-" . $this->digest() . ".$1", $this->logicalPath);
+        if ($this->length) {
+            return $this->length;
         }
+
+        return $this->length = filesize($this->path);
     }
 
-    private function alreadyDigested()
+    public function digest(): string
     {
-        return preg_match("/-([0-9a-f]{7,128})\.digested\.[^.]+\z/", $this->logicalPath);
+        if ($this->digest) {
+            return $this->digest;
+        }
+
+        return $this->digest = sha1_file($this->path);
+    }
+
+    public function digestedPath(): string
+    {
+        if ($this->digestedPath) {
+            return $this->digestedPath;
+        }
+
+        if ($this->alreadyDigested()) {
+            $this->digestedPath = $this->logicalPath;
+        } else {
+            $this->digestedPath = preg_replace("/\.(\w+)$/", "-" . $this->digest() . ".$1", $this->logicalPath);
+        }
+
+        return $this->digestedPath;
+    }
+
+    private function alreadyDigested(): bool
+    {
+        return preg_match("/-([0-9a-f]{7,128})\.digested/", $this->logicalPath);
     }
 }
