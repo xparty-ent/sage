@@ -4,7 +4,7 @@
  * @see {@link https://roots.io/docs/sage sage documentation}
  * @see {@link https://bud.js.org/guides/configure bud.js configuration guide}
  *
- * @type {import('@roots/bud').Config}
+ * @param {import('@roots/bud').Bud} app
  */
 export default async (app) => {
   /**
@@ -16,14 +16,17 @@ export default async (app) => {
   app
     .entry('app', ['@scripts/app', '@styles/app'])
     .entry('editor', ['@scripts/editor', '@styles/editor'])
-    .assets(['images']);
+    .assets(['images', 'models'])
+    .provide({
+      jquery: ["jQuery", "$"],
+    });
 
   /**
    * Set public path
    *
    * @see {@link https://bud.js.org/docs/bud.setPublicPath}
    */
-  app.setPublicPath('/app/themes/sage/public/');
+  app.setPublicPath('/app/themes/xp-theme/public/');
 
   /**
    * Development server settings
@@ -46,32 +49,18 @@ export default async (app) => {
    * @see {@link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-json}
    */
   app.wpjson
-    .setSettings({
-      color: {
-        custom: false,
-        customDuotone: false,
-        customGradient: false,
-        defaultDuotone: false,
-        defaultGradients: false,
-        defaultPalette: false,
-        duotone: [],
-      },
-      custom: {
-        spacing: {},
-        typography: {
-          'font-size': {},
-          'line-height': {},
-        },
-      },
-      spacing: {
-        padding: true,
-        units: ['px', '%', 'em', 'rem', 'vw', 'vh'],
-      },
-      typography: {
-        customFontSize: false,
-      },
-    })
-    .useTailwindColors()
-    .useTailwindFontFamily()
-    .useTailwindFontSize();
+    .set('settings.color.custom', false)
+    .set('settings.color.customDuotone', false)
+    .set('settings.color.customGradient', false)
+    .set('settings.color.defaultDuotone', false)
+    .set('settings.color.defaultGradients', false)
+    .set('settings.color.defaultPalette', false)
+    .set('settings.color.duotone', [])
+    .set('settings.custom.spacing', {})
+    .set('settings.custom.typography.font-size', {})
+    .set('settings.custom.typography.line-height', {})
+    .set('settings.spacing.padding', true)
+    .set('settings.spacing.units', ['px', '%', 'em', 'rem', 'vw', 'vh'])
+    .set('settings.typography.customFontSize', false)
+    .enable();
 };

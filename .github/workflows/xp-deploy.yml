@@ -1,0 +1,118 @@
+name: Theme Deploy
+
+on:
+  push:
+    branches: [ "master" ]
+
+permissions:
+  contents: write
+
+jobs:
+  checkout:
+    runs-on: [self-hosted, doctorparts-host]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with: 
+          submodules: true
+          lfs: true
+          ref: 'master'
+
+      - name: Update submodules
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
+
+  build:
+    runs-on: [self-hosted, doctorparts-host]
+    needs: checkout
+    steps:
+      - uses: actions/setup-node@v3
+      
+      - name: Cache npm packages
+        id: npm-wordpress-theme-js-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-wordpress-theme-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-wordpress-theme-npm-
+            
+      - name: Cache WP Composer packages
+        id: composer-wordpress-theme-php-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-wordpress-theme-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-wordpress-theme-php-
+      
+      - name: Install dependecies
+        run: |
+          npm i
+          composer install
+
+  release:
+    runs-on: [self-hosted, doctorparts-host]
+    needs: build
+    steps:
+      - name: Generate release tag
+        id: generate_release_tag
+        uses: amitsingh-007/next-release-tag@v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: 'v'
+          tag_template: 'yyyy.mm.dd.i'
+
+      - name: Theme packing
+        run: |
+          cd ..
+          mkdir xp-theme
+          cp -r ./sage/* ./xp-theme/
+          zip -q ./sage/xp-theme.zip -r ./xp-theme/
+          rm -rf ./xp-theme
+          cd ./sage
+
+      - name: Creating version file
+        run: |
+          cp version.example.json version.json
+          sed -i 's/--WP-UPDATE-VERSION--/'$(echo "${{ steps.generate_release_tag.outputs.prev_release_tag }}" | sed "s/v//")'/g' version.json
+          sed -i 's/--WP-UPDATE-NEW-VERSION--/'$(echo "${{ steps.generate_release_tag.outputs.next_release_tag }}" | sed "s/v//")'/g' version.json
+          sed -i "s/--WP-LAST-UPDATED--/`date '+%Y-%m-%d %H:%M:%S'`/g" version.json
+          sed -i "s/--WP-DOWNLOAD-LINK--/https:\/\/github.com\/${{ github.event.repository.owner.name }}\/${{ github.event.repository.name }}\/releases\/download\/${{ steps.generate_release_tag.outputs.next_release_tag }}\/xp-theme.zip/g" version.json
+          
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commitish: 'master'
+          tag_name: ${{ steps.generate_release_tag.outputs.next_release_tag }}
+          release_name: Release ${{ steps.generate_release_tag.outputs.next_release_tag }}
+          body: Automatic CI Release by ${{ github.actor }} at ${{ github.ref }} reference
+          draft: false
+          prerelease: false
+          
+      - name: Upload Package Asset
+        id: upload-package-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./xp-theme.zip
+          asset_name: xp-theme.zip
+          asset_content_type: application/zip
+
+      - name: Upload Version Asset
+        id: upload-version-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./version.json
+          asset_name: version.json
+          asset_content_type: application/json

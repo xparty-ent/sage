@@ -1,11 +1,9 @@
-<a class="sr-only focus:not-sr-only" href="#main">
-  {{ __('Skip to content') }}
-</a>
-
+@include('sections.mouse')
+@include('sections.preloader')
 @include('sections.header')
 
   <main id="main" class="main">
-    @yield('content')
+    @yield('page-content')
   </main>
 
   @hasSection('sidebar')
@@ -15,3 +13,5 @@
   @endif
 
 @include('sections.footer')
+
+@stack('post-app-script')
