@@ -2,7 +2,7 @@ name: Theme Deploy
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 permissions:
   contents: write
@@ -17,7 +17,6 @@ jobs:
         with: 
           submodules: true
           lfs: true
-          ref: 'master'
 
       - name: Update submodules
         run: |
@@ -88,7 +87,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commitish: 'master'
+          commitish: 'main'
           tag_name: ${{ steps.generate_release_tag.outputs.next_release_tag }}
           release_name: Release ${{ steps.generate_release_tag.outputs.next_release_tag }}
           body: Automatic CI Release by ${{ github.actor }} at ${{ github.ref }} reference

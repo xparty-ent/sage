@@ -13,7 +13,7 @@ function xp_themes_update($res, $action) {
         return $res;
 
     // retrieve the latest release from github
-    $latest_release_response = wp_remote_get('https://api.github.com/repos/xparty-ent/wordpress-theme/releases/latest', [
+    $latest_release_response = wp_remote_get('https://api.github.com/repos/xparty-ent/sage/releases/latest', [
         'headers' => [
         ]
     ]);
