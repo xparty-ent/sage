@@ -23,7 +23,7 @@ function xp_register_url($register_url) {
 }
 
 function xp_disable_wp_login() {
-    global $pagenow;
+    global $pagenow, $wp;
     if($pagenow == 'wp-login.php') {
         return wp_redirect(xp_login_url('/login'));
     }

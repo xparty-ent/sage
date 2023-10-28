@@ -8,23 +8,23 @@ const mouse = {
         $(document).on('mousemove', event => {
             const scroll = $(window).scrollTop();
             const position = {
-                x: event.clientX,
-                y: event.clientY + scroll,
+                x: Math.min(event.clientX, $(window).width() - (mouseElement.width() / 2) - 1),
+                y: Math.min(event.clientY + scroll, $(window).height() - (mouseElement.height() / 2) - 1),
             };
 
             const outerPosition = {
-                x: event.clientX,
-                y: event.clientY + scroll,
+                x: Math.min(event.clientX, $(window).width() - (mouseOuterElement.width() / 2) - 1),
+                y: Math.min(event.clientY + scroll, $(window).height() - (mouseOuterElement.height() / 2) - 1),
             }
 
             mouseElement.css({
-                left: position.x,
-                top: position.y
+                left: Math.max(position.x, (mouseElement.width() / 2) + 1),
+                top: Math.max(position.y, (mouseElement.height() / 2) + 1),
             });
 
             gsap.to(mouseOuterElement, {
-                left: outerPosition.x,
-                top: outerPosition.y,
+                left: Math.max(outerPosition.x, (mouseOuterElement.width() / 2) + 1),
+                top: Math.max(outerPosition.y, (mouseOuterElement.height() / 2) + 1),
                 duration: 0.5,
                 ease: 'ease-in'
             });

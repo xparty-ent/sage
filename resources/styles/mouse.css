@@ -10,6 +10,7 @@
     padding: 0;
     margin: 0;
     z-index: 2;
+    overflow: none;
 }
 
 .mouse {
@@ -25,8 +26,14 @@
     border: 1px solid white;
 }
 
+/*
 @media only screen and (max-width: 600px) {
     .mouse, .mouse-outer {
         display: none;
     }
+}
+*/
+
+html, a, input, p, label, #app {
+    cursor: none;
 }

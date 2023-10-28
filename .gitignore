@@ -1,6 +1,7 @@
 *.log
 public/*
 vendor/
+yarn.lock
 composer.lock
 node_modules/
 package-lock.json

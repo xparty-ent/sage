@@ -2,6 +2,7 @@
     width: 300px;
     height: fit-content;
     background: #bdbdbd;
+    display: none;
 }
 
 .xp-login-container {
@@ -16,7 +17,16 @@
 }
 
 
-.xp-login-error {
+.xp-login.show {
+    display: block;
+}
+
+.xp-login-container.interim-login {
+    height: 100vh;
+}
+
+
+.xp-login-status {
     width: 300px;
     height: fit-content;
     background: #bdbdbd;
@@ -25,7 +35,7 @@
     opacity: 0;
 }
 
-.xp-login-error.show {
+.xp-login-status.show {
     opacity: 1;
 }
 
@@ -34,14 +44,30 @@
     text-align: center;
 }
 
-#login-error-text a,
+.xp-login-status #login-error-text a,
 .xp-login-footer a {
     color: #212121;
 }
 
-.xp-login-error p {
+.xp-login-status p {
     font-family: 'tstar';
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.xp-login-status #login-error-text {
     color: red;
+    display: none;
+}
+
+.xp-login-status #login-status-text {
+    color: #212121;
+    display: none;
+}
+
+.xp-login-status #login-error-text.show,
+.xp-login-status #login-status-text.show {
+    display: block;
 }
 
 .xp-login h1, .xp-login label {

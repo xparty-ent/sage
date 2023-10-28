@@ -12,10 +12,12 @@
 
     switch($post->post_name) {
         case 'login':
+            /*
             if(is_user_logged_in()) {
                 wp_redirect(get_home_url());
                 return;
             }
+            */
             break;
     }
 }

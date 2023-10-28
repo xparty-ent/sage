@@ -10,7 +10,6 @@
 
 html {
     margin-top: 0 !important;
-    cursor: none;
 }
 
 html, body {
@@ -18,15 +17,10 @@ html, body {
     width: 100%;
 }
 
-a, input, p, label {
-    cursor: none;
-}
-
 #app {
     background-color: #e0e0e0;
     height: fit-content;
     width: 100%;
-    cursor: none;
 }
 
 #wpadminbar {
@@ -34,6 +28,14 @@ a, input, p, label {
 }
 
 #main {
-    height: calc(100% - var(--xp-header-height) - 65px);
+    height: calc(100% - var(--xp-header-height) - var(--xp-footer-height));
     margin-top: var(--xp-header-height);
+}
+
+#main.header-hidden {
+    margin-top: 0;
+}
+
+#main.footer-hidden {
+    height: 100%;
 }
