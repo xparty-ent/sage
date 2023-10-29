@@ -2,13 +2,13 @@ const CACHE_VERSION = 1;
 const CURRENT_CACHES = [
     {
         name: `3d-models-cache-v${CACHE_VERSION}`,
-        contentTypeMatch: /^model\//i,
-        urlMatch: null
+        contentTypeMatch: null, ///^model\//i,
+        urlMatch: /\.glb/
     },
     {
         name: `fonts-cache-v${CACHE_VERSION}`,
-        contentTypeMatch: /^font\//i,
-        urlMatch: null,
+        contentTypeMatch: null, ///^font\//i,
+        urlMatch: /\.ttf|\.otf/i,
     },
     {
         name: `wp-includes-scripts-cache-v${CACHE_VERSION}`,
