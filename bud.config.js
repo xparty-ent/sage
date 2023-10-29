@@ -20,6 +20,13 @@ export default async (app) => {
     .provide({
       jquery: ["jQuery", "$"],
     });
+  
+  /**
+   * Enable bud sourcemaps
+   * 
+   * @see {@link https://bud.js.org/reference/bud.devtool}
+   */
+  app.devtool('inline-source-map');
 
   /**
    * Set public path
