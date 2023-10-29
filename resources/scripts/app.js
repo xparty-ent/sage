@@ -16,6 +16,7 @@ if (import.meta.webpackHot) import.meta.webpackHot.accept(console.error);
  * Application entrypoint
  */
 domReady(async () => {
+  xp.register();
   mouse.register();
   navbar.register();
   preloader.register();
