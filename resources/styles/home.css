@@ -29,6 +29,7 @@
     bottom: 2vh;
     left: 50%;
     transform: translateX(-50%);
+    will-change: transform;
     animation: down-arrow-oscillation 1s ease-in-out infinite;
 }
 
@@ -58,9 +59,9 @@
 }
 
 @keyframes down-arrow-oscillation {
-    0% { margin-bottom: 1vh;  }
-    50% { margin-bottom: 2vh; }
-    100% { margin-bottom: 1vh; }
+    0% { transform: translateY(1vh);  }
+    50% { transform: translateY(2vh); }
+    100% { transform: translateY(1vh); }
 }
 
 .home-container .down-arrow:hover:after,
