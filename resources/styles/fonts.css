@@ -1,19 +1,23 @@
 @font-face {
     font-family: comfortoaa;
     src: url('@fonts/comfortoaa.ttf');
+    font-display: swap;
 }
 
 @font-face {
     font-family: sofiapro;
     src: url('@fonts/sofiapro.otf');
+    font-display: swap;
 }
 
 @font-face {
     font-family: tstar;
     src: url('@fonts/tstar.otf');
+    font-display: swap;
 }
 
 @font-face {
     font-family: ptmono;
     src: url('@fonts/ptmono.ttf');
+    font-display: swap;
 }
