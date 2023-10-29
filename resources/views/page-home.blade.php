@@ -53,7 +53,7 @@
             ease: 'none'
         });
 
-        gsap.to(model.gltf.scene.position, {
+        gsap.to(model.position, {
             x: 0,
             y: 0,
             z: 0,
@@ -61,13 +61,13 @@
             ease: 'sin'
         });
 
-        gsap.to(model.gltf.scene.rotation, {
+        gsap.to(model.rotation, {
             y: 1,
             duration: 2.5,
             ease: 'sin'
         });
 
-        modelTimeline.to(model.gltf.scene.rotation, {
+        modelTimeline.to(model.rotation, {
             x: 2 * Math.PI,
             y: 2 * Math.PI,
             z: 2 * Math.PI,
@@ -90,7 +90,7 @@
         const posX = scene.getWorldSize().x / 2;
 
 
-        gsap.to(model.gltf.scene.rotation, {
+        gsap.to(model.rotation, {
             x: 0,
             y: 0,
             z: 0,
@@ -98,13 +98,13 @@
             ease: 'back'
         });
 
-        modelTimeline.to(model.gltf.scene.position, {
+        modelTimeline.to(model.position, {
             x: posX,
             duration: 2.5,
             ease: 'back'
         });
         
-        modelTimeline.to(model.gltf.scene.rotation, {
+        modelTimeline.to(model.rotation, {
             y: 2 * Math.PI,
             duration: 10,
             repeat: -1,
@@ -151,6 +151,22 @@
         return torus;
     }
 
+    var createIcosphere = () => {
+        const geometry = new THREE.IcosahedronGeometry(0.5, 1);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0x212121
+        });
+        
+        material.emissive.r = 0x21 / 255;
+        material.emissive.g = 0x21 / 255;
+        material.emissive.b = 0x21 / 255;
+
+        const icosphere = new THREE.Mesh(geometry, material);
+        scene.scene.add(icosphere);
+        
+        return icosphere;
+    }
+
     var nextTile = () => {
         const tiles = $('.tile');
 
@@ -183,9 +199,9 @@
 
     var onTileChanging = (tile) => {
         if(tile.hasClass('main')) {
-            tile1Animation(window.scene, window.model, window.torus);
+            tile1Animation(window.scene, window.icosphere, window.torus);
         } else if(tile.hasClass('middle')) {
-            tile2Animation(window.scene, window.model, window.torus);
+            tile2Animation(window.scene, window.icosphere, window.torus);
         }
     }
 
@@ -249,9 +265,20 @@
         
         const scene = xp.renderer.create($('.renderer'));
         window.scene = scene;
+        
+        window.icosphere = createIcosphere();
+        window.torus = createTorus();
+
+        const light = new THREE.AmbientLight( 0x404040 );
+
+        scene.scene.add(light);
+        
+        $(window).scrollTop(0);
+        tile1Animation(scene, window.icosphere, window.torus);
 
 
 
+        /*
         scene.addModel("{{ asset('/models/xp-icosphere.glb') }}")
             .then(model => {
                 model.gltf.scene.scale.x /= 2;
@@ -266,10 +293,10 @@
                 });
 
                 window.model = model;
-                window.torus = createTorus();
                 $(window).scrollTop(0);
                 tile1Animation(scene, model, torus);
             });
+        */
     }
 
     $(window).on('load', () => init());

@@ -48,6 +48,7 @@ class scene {
         this.light = new THREE.DirectionalLight(0xffffff, 0.5);
         this.scene.add(this.light);
 
+        this.onResize();
         this.render();
     }
 
@@ -71,7 +72,6 @@ class scene {
         $(this.render.domElement).height(this.height);
     
         this.renderer.setSize(this.width, this.height);
-        console.log("resize");
     }
 
     render() {

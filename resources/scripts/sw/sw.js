@@ -1,4 +1,4 @@
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 2;
 const CURRENT_CACHES = [
     {
         name: `3d-models-cache-v${CACHE_VERSION}`,
