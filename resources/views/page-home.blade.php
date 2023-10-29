@@ -292,6 +292,7 @@
 
         scene.scene.add(light);
 
+        /*
         const torusPromise = createTorus();
         const spherePromise = createIcosphere();
 
@@ -300,7 +301,7 @@
                 $(window).scrollTop(0);
                 tile1Animation(scene, window.icosphere, window.torus);
             });
-        
+        */
 
 
 
