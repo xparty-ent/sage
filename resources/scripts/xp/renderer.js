@@ -82,7 +82,7 @@ class scene {
         window.requestAnimationFrame(() => this.render());
     }
 
-    addModel(path) {
+    loadModel(path) {
         return new Promise((resolve, reject) => {
             this.loader.load(path, gltf => {
                 if(!gltf) {
@@ -90,10 +90,16 @@ class scene {
                     return;
                 }
 
-                const m = new model(gltf);
-                this.scene.add(m.gltf.scene);
+                resolve(new model(gltf));
+            });
+        });
+    }
 
-                resolve(m);
+    addModel(path) {
+        return new Promise((resolve, reject) => {
+            this.loadModel(path).then(model => {
+                this.scene.add(model.gltf.scene);
+                resolve(model);
             });
         });
     }

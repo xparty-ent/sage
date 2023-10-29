@@ -53,7 +53,7 @@
             ease: 'none'
         });
 
-        gsap.to(model.position, {
+        gsap.to(model.gltf.scene.position, {
             x: 0,
             y: 0,
             z: 0,
@@ -61,13 +61,13 @@
             ease: 'sin'
         });
 
-        gsap.to(model.rotation, {
+        gsap.to(model.gltf.scene.rotation, {
             y: 1,
             duration: 2.5,
             ease: 'sin'
         });
 
-        modelTimeline.to(model.rotation, {
+        modelTimeline.to(model.gltf.scene.rotation, {
             x: 2 * Math.PI,
             y: 2 * Math.PI,
             z: 2 * Math.PI,
@@ -90,7 +90,7 @@
         const posX = scene.getWorldSize().x / 2;
 
 
-        gsap.to(model.rotation, {
+        gsap.to(model.gltf.scene.rotation, {
             x: 0,
             y: 0,
             z: 0,
@@ -98,13 +98,13 @@
             ease: 'back'
         });
 
-        modelTimeline.to(model.position, {
+        modelTimeline.to(model.gltf.scene.position, {
             x: posX,
             duration: 2.5,
             ease: 'back'
         });
         
-        modelTimeline.to(model.rotation, {
+        modelTimeline.to(model.gltf.scene.rotation, {
             y: 2 * Math.PI,
             duration: 10,
             repeat: -1,
@@ -144,27 +144,49 @@
     }
 
     var createTorus = () => {
+        /*
         const geometry = new THREE.TorusGeometry(1.5, 0.1, 13, 137, Math.PI * 2)
-        const material = new THREE.PointsMaterial( { size: 0.5, color: 0x212121 } ); 
-        const torus = new THREE.Points( geometry, material );
+        
         scene.scene.add(torus);
         return torus;
+        */
+
+        const material = new THREE.PointsMaterial({ size: 0.5, color: 0x212121 }); 
+
+        return window.scene.loadModel("{{ asset('/models/xp-torus.glb') }}")
+            .then(model => {
+                var geometry = null;
+                model.gltf.scene.traverse(object => {
+                    if(!object.geometry) return;
+                    geometry = object.geometry;
+                });
+
+
+                geometry.scale(0.5, 0.5, 0.5);
+                const torus = new THREE.Points( geometry, material );
+
+                window.torus = torus;
+                
+                scene.scene.add(torus);
+        });
     }
 
     var createIcosphere = () => {
-        const geometry = new THREE.IcosahedronGeometry(0.5, 1);
-        const material = new THREE.MeshStandardMaterial({
-            color: 0x212121
-        });
-        
-        material.emissive.r = 0x21 / 255;
-        material.emissive.g = 0x21 / 255;
-        material.emissive.b = 0x21 / 255;
+        return window.scene.addModel("{{ asset('/models/xp-icosphere.glb') }}")
+            .then(model => {
+                model.gltf.scene.scale.x /= 2;
+                model.gltf.scene.scale.y /= 2;
+                model.gltf.scene.scale.z /= 2;
 
-        const icosphere = new THREE.Mesh(geometry, material);
-        scene.scene.add(icosphere);
-        
-        return icosphere;
+                model.gltf.scene.traverse(object => {
+                    if(!object.material) return;
+                    object.material.emissive.r = 0x21 / 255;
+                    object.material.emissive.g = 0x21 / 255;
+                    object.material.emissive.b = 0x21 / 255;
+                });
+
+                window.icosphere = model;
+        });
     }
 
     var nextTile = () => {
@@ -266,15 +288,19 @@
         const scene = xp.renderer.create($('.renderer'));
         window.scene = scene;
         
-        window.icosphere = createIcosphere();
-        window.torus = createTorus();
-
         const light = new THREE.AmbientLight( 0x404040 );
 
         scene.scene.add(light);
+
+        const torusPromise = createTorus();
+        const spherePromise = createIcosphere();
+
+        Promise.all([spherePromise, torusPromise])
+            .then(() => {
+                $(window).scrollTop(0);
+                tile1Animation(scene, window.icosphere, window.torus);
+            });
         
-        $(window).scrollTop(0);
-        tile1Animation(scene, window.icosphere, window.torus);
 
 
 
