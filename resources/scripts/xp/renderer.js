@@ -35,7 +35,7 @@ class scene {
         this.loader = new GLTFLoader();
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(1, this.width / this.height, 0.1, 100000);
-        this.raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0.1, 100000);
+        //this.raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0.1, 100000);
 
         this.renderer = new THREE.WebGLRenderer({
             alpha: true,

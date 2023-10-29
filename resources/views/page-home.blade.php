@@ -285,12 +285,12 @@
         $(window).on('scroll-next', event => onScrollNext(event));
         $(window).on('scroll-prev', event => onScrollPrev(event));
         
-        //const scene = xp.renderer.create($('.renderer'));
-        //window.scene = scene;
+        const scene = xp.renderer.create($('.renderer'));
+        window.scene = scene;
         
         //const light = new THREE.AmbientLight( 0x404040 );
 
-        scene.scene.add(light);
+        //scene.scene.add(light);
 
         /*
         const torusPromise = createTorus();
