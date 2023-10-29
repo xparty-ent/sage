@@ -26,7 +26,7 @@ export default async (app) => {
    * 
    * @see {@link https://bud.js.org/reference/bud.devtool}
    */
-  app.devtool('source-map');
+  //app.devtool('source-map');
 
   /**
    * Set public path
