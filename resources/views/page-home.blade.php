@@ -37,7 +37,7 @@
             }
         });
 
-        gsap.to(torus.position, {
+        gsap.to(torus.gltf.scene.position, {
             x: 0,
             y: 0,
             z: 0,
@@ -45,7 +45,7 @@
             ease: 'sin'
         });
 
-        torusTimeline.to(torus.rotation, {
+        torusTimeline.to(torus.gltf.scene.rotation, {
             x: 2 * Math.PI,
             y: 2 * Math.PI,
             duration: 30,
@@ -111,7 +111,7 @@
             ease: 'none'
         });
 
-        gsap.to(torus.rotation, {
+        gsap.to(torus.gltf.scene.rotation, {
             x: 0,
             y: 1.55,
             z: 0,
@@ -119,19 +119,19 @@
             ease: 'back'
         });
 
-        torusTimeline.to(torus.position, {
+        torusTimeline.to(torus.gltf.scene.position, {
             x: posX,
             duration: 2.5,
             ease: 'back'
         });
         
-        torusTimeline.to(torus.rotation, {
+        torusTimeline.to(torus.gltf.scene.rotation, {
             y: 0,
             duration: 2.5,
             ease: 'back'
         });
 
-        torusTimeline.to(torus.rotation, {
+        torusTimeline.to(torus.gltf.scene.rotation, {
             z: 2 * Math.PI,
             duration: 30,
             repeat: -1,
@@ -143,31 +143,37 @@
         sceneTimeline.play();
     }
 
-    var createTorus = () => {
-        /*
-        const geometry = new THREE.TorusGeometry(1.5, 0.1, 13, 137, Math.PI * 2)
-        
-        scene.scene.add(torus);
-        return torus;
-        */
-
-        const material = new THREE.PointsMaterial({ size: 0.5, color: 0x212121 }); 
-
-        return window.scene.loadModel("{{ asset('/models/xp-torus.glb') }}")
+    var createArmature = () => {
+        return window.scene.addModel("{{ asset('/models/xp-armature.glb') }}")
             .then(model => {
-                var geometry = null;
+                model.gltf.scene.scale.x = 0.65;
+                model.gltf.scene.scale.y = 0.65;
+                model.gltf.scene.scale.z = 0.65;
+
                 model.gltf.scene.traverse(object => {
-                    if(!object.geometry) return;
-                    geometry = object.geometry;
+                    if(!object.material) return;
+                    object.material.color.r = 0x21 / 255;
+                    object.material.color.g = 0x21 / 255;
+                    object.material.color.b = 0x21 / 255;
                 });
 
-
-                geometry.scale(0.5, 0.5, 0.5);
-                const torus = new THREE.Points( geometry, material );
-
-                window.torus = torus;
+                window.armature = model;
                 
-                scene.scene.add(torus);
+        });
+    }
+
+    var createTorus = () => {
+        return window.scene.addModel("{{ asset('/models/xp-torus.glb') }}")
+            .then(model => {
+                model.gltf.scene.traverse(object => {
+                    if(!object.material) return;
+                    object.material.color.r = 0x21 / 255;
+                    object.material.color.g = 0x21 / 255;
+                    object.material.color.b = 0x21 / 255;
+                });
+
+                window.torus = model;
+                
         });
     }
 
@@ -288,42 +294,17 @@
         const scene = xp.renderer.create($('.renderer'));
         window.scene = scene;
         
-        //const light = new THREE.AmbientLight( 0x404040 );
-
-        //scene.scene.add(light);
-
-        /*
+        
         const torusPromise = createTorus();
         const spherePromise = createIcosphere();
+        const armaturePromise = createArmature();
 
-        Promise.all([spherePromise, torusPromise])
+        Promise.all([spherePromise, torusPromise, armaturePromise])
             .then(() => {
                 $(window).scrollTop(0);
                 tile1Animation(scene, window.icosphere, window.torus);
             });
-        */
-
-
-
-        /*
-        scene.addModel("{{ asset('/models/xp-icosphere.glb') }}")
-            .then(model => {
-                model.gltf.scene.scale.x /= 2;
-                model.gltf.scene.scale.y /= 2;
-                model.gltf.scene.scale.z /= 2;
-
-                model.gltf.scene.traverse(object => {
-                    if(!object.material) return;
-                    object.material.emissive.r = 0x21 / 255;
-                    object.material.emissive.g = 0x21 / 255;
-                    object.material.emissive.b = 0x21 / 255;
-                });
-
-                window.model = model;
-                $(window).scrollTop(0);
-                tile1Animation(scene, model, torus);
-            });
-        */
+        
     }
 
     $(window).on('load', () => init());
