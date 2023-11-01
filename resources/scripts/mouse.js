@@ -1,3 +1,4 @@
+import domReady from '@roots/sage/client/dom-ready';
 import gsap from 'gsap';
 
 const mouse = {
@@ -32,4 +33,8 @@ const mouse = {
     }
 };
 
-export default mouse;
+domReady(() => {
+    mouse.register();
+});
+
+window.mouse = mouse;

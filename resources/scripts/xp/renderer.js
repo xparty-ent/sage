@@ -39,7 +39,9 @@ class scene {
 
         this.renderer = new THREE.WebGLRenderer({
             alpha: true,
-            antialias: true
+            antialias: true,
+            precision: "highp",
+            powerPreference: "high-performance"
         });
 
         this.renderer.setSize(this.width, this.height);

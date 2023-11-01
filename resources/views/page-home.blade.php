@@ -22,10 +22,12 @@
     const sceneTimeline = gsap.timeline();
     const modelTimeline = gsap.timeline();
     const torusTimeline = gsap.timeline();
+    const armatureTimeline = gsap.timeline();
 
-    var tile1Animation = (scene, model, torus) => {
+    var tile1Animation = (scene, model, torus, armature) => {
         sceneTimeline.clear();
         modelTimeline.clear();
+        armatureTimeline.clear();
         torusTimeline.clear();
 
         gsap.to(scene.camera.position, {
@@ -61,7 +63,21 @@
             ease: 'sin'
         });
 
+        gsap.to(armature.gltf.scene.position, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 1,
+            ease: 'sin'
+        });
+
         gsap.to(model.gltf.scene.rotation, {
+            y: 1,
+            duration: 2.5,
+            ease: 'sin'
+        });
+
+        gsap.to(armature.gltf.scene.rotation, {
             y: 1,
             duration: 2.5,
             ease: 'sin'
@@ -76,16 +92,27 @@
             ease: 'none'
         });
 
+        armatureTimeline.to(armature.gltf.scene.rotation, {
+            x: -(2 * Math.PI),
+            y: -(2 * Math.PI),
+            z: -(2 * Math.PI),
+            duration: 10,
+            repeat: -1,
+            ease: 'none'
+        });
+
         
         torusTimeline.play();
         modelTimeline.play();
+        armatureTimeline.play();
         sceneTimeline.play();
     }
 
-    var tile2Animation = (scene, model, torus) => {
+    var tile2Animation = (scene, model, torus, armature) => {
         sceneTimeline.clear();
         modelTimeline.clear();
         torusTimeline.clear();
+        armatureTimeline.clear();
 
         const posX = scene.getWorldSize().x / 2;
 
@@ -103,8 +130,21 @@
             duration: 2.5,
             ease: 'back'
         });
+
+        armatureTimeline.to(armature.gltf.scene.position, {
+            x: posX,
+            duration: 2.5,
+            ease: 'back'
+        });
         
         modelTimeline.to(model.gltf.scene.rotation, {
+            y: 2 * Math.PI,
+            duration: 10,
+            repeat: -1,
+            ease: 'none'
+        });
+
+        armatureTimeline.to(armature.gltf.scene.rotation, {
             y: 2 * Math.PI,
             duration: 10,
             repeat: -1,
@@ -140,6 +180,7 @@
 
         torusTimeline.play();
         modelTimeline.play();
+        armatureTimeline.play();
         sceneTimeline.play();
     }
 
@@ -227,9 +268,9 @@
 
     var onTileChanging = (tile) => {
         if(tile.hasClass('main')) {
-            tile1Animation(window.scene, window.icosphere, window.torus);
+            tile1Animation(window.scene, window.icosphere, window.torus, window.armature);
         } else if(tile.hasClass('middle')) {
-            tile2Animation(window.scene, window.icosphere, window.torus);
+            tile2Animation(window.scene, window.icosphere, window.torus, window.armature);
         }
     }
 
@@ -302,7 +343,7 @@
         Promise.all([spherePromise, torusPromise, armaturePromise])
             .then(() => {
                 $(window).scrollTop(0);
-                tile1Animation(scene, window.icosphere, window.torus);
+                tile1Animation(scene, window.icosphere, window.torus, window.armature);
             });
         
     }

@@ -1,3 +1,5 @@
+import domReady from "@roots/sage/client/dom-ready";
+
 const navbar = {
     register: () => {
         const toggle = $('.mobile-menu-toggle');
@@ -11,4 +13,8 @@ const navbar = {
     }
 };
 
-export default navbar;
+domReady(() => {
+    navbar.register();
+});
+
+window.navbar = navbar;

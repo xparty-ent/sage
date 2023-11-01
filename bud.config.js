@@ -16,6 +16,11 @@ export default async (app) => {
   app
     .entry('app', ['@scripts/app', '@styles/app'])
     .entry('editor', ['@scripts/editor', '@styles/editor'])
+    .entry('xp', ['@scripts/xp'])
+    .entry('scroll', ['@scripts/scroll'])
+    .entry('mouse', ['@scripts/mouse'])
+    .entry('navbar', ['@scripts/navbar'])
+    .entry('preloader', ['@scripts/preloader', '@styles/preloader'])
     .assets(['images', 'models'])
     .provide({
       jquery: ["jQuery", "$"],
@@ -43,7 +48,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.watch}
    */
   app
-    .setUrl('http://localhost:3000')
+    .setUrl('http://localhost:80')
     .setProxyUrl('http://example.test')
     .watch(['resources/views', 'app']);
 

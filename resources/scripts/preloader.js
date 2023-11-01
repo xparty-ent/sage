@@ -1,3 +1,5 @@
+import domReady from "@roots/sage/client/dom-ready";
+
 const preloader = {
     register() {
 
@@ -10,4 +12,8 @@ const preloader = {
     }
 };
 
-export default preloader;
+domReady(() => {
+    preloader.register();
+});
+
+window.preloader = preloader;

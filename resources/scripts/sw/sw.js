@@ -19,6 +19,11 @@ const CURRENT_CACHES = [
         name: `wp-includes-css-cache-v${CACHE_VERSION}`,
         contentTypeMatch: /\/css/i,
         urlMatch: /wp\/wp-includes/i
+    },
+    {
+        name: `xp-scripts-cache-v${CACHE_VERSION}`,
+        contentTypeMatch: /\/javascript/i,
+        urlMatch: /xp-theme\/public\/js\//i
     }
 ];
 

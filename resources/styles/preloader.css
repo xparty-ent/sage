@@ -1,0 +1,41 @@
+.preloader:before {
+    content: "";
+    position: absolute;
+    z-index: 1000;
+    top: 0%;
+    left: 0%;
+    width: 100vw;
+    height: 50vh;
+    background-color: #212121;
+}
+
+.preloader:after {
+    content: "";
+    position: absolute;
+    z-index: 1000;
+    top: 50vh;
+    left: 0%;
+    width: 100vw;
+    height: 50vh;
+    background-color: #212121;
+}
+
+.preloader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+}
+
+.preloader a {
+    color: #e0e0e0;
+    z-index: 1001;
+    top: 50%;
+    left: 50% !important;
+    margin: 0;
+    margin-left: 0 !important;
+    padding: 0;
+    transform: translate(-50%, -50%);
+}
