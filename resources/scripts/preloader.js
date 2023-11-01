@@ -1,8 +1,12 @@
 import domReady from "@roots/sage/client/dom-ready";
 
 const preloader = {
-    register() {
+    _onDomLoaded(e) {
+        $('.preloader').addClass('faded');
+    },
 
+    register() {
+        $(window).on('load', (e) => this._onDomLoaded(e));
     },
 
     dismiss() {
