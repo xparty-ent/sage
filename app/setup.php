@@ -14,7 +14,6 @@ use function Roots\bundle;
  * @return void
  */
 add_action('wp_enqueue_scripts', function () {
-    bundle('preloader')->enqueue();
     bundle('app')->enqueue();
     bundle('xp')->enqueue();
     bundle('scroll')->enqueue();
