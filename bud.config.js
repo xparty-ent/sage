@@ -20,7 +20,6 @@ export default async (app) => {
     .entry('scroll', ['@scripts/scroll'])
     .entry('mouse', ['@scripts/mouse'])
     .entry('navbar', ['@scripts/navbar'])
-    .entry('preloader', ['@scripts/preloader', '@styles/preloader'])
     .assets(['images', 'models'])
     .provide({
       jquery: ["jQuery", "$"],

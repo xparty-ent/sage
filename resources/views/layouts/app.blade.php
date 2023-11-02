@@ -1,8 +1,6 @@
 
 @include('sections.mouse')
 
-@include('sections.preloader')
-
 @if(!isset($hide_header) || !$hide_header)
   @include('sections.header')
 @endif
