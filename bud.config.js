@@ -51,6 +51,7 @@ export default async (app) => {
     .setProxyUrl('http://example.test')
     .watch(['resources/views', 'app']);
 
+
   /**
    * Generate WordPress `theme.json`
    *
@@ -60,12 +61,51 @@ export default async (app) => {
    * @see {@link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-json}
    */
   app.wpjson
-    .set('settings.color.custom', false)
-    .set('settings.color.customDuotone', false)
-    .set('settings.color.customGradient', false)
-    .set('settings.color.defaultDuotone', false)
-    .set('settings.color.defaultGradients', false)
-    .set('settings.color.defaultPalette', false)
+    .set('settings.color.custom', true)
+    .set('settings.color.customDuotone', true)
+    .set('settings.color.customGradient', true)
+    .set('settings.color.defaultDuotone', true)
+    .set('settings.color.defaultGradients', true)
+    .set('settings.color.defaultPalette', true)
+  
+    .set('settings.appearanceTools', true)
+    .set('settings.color.palette', [
+      {
+        color: '#e0e0e0',
+        name: 'Base',
+        slug: 'base'
+      },
+      {
+        color: '#212121',
+        name: 'Accent',
+        slug: 'accent'
+      }
+    ])
+
+    .set('settings.typography.fontFamilies', [
+      {
+        fontFamily: "comfortoaa",
+        name: 'Comfortoaa',
+        slug: 'comfortoaa'
+      },
+      {
+        fontFamily: "sofiapro",
+        name: 'Sofia Pro',
+        slug: 'sofiapro'
+      },
+      {
+        fontFamily: "tstar",
+        name: 'TStar',
+        slug: 'tstar'
+      },
+      {
+        fontFamily: "ptmono",
+        name: 'PT Mono',
+        slug: 'ptmono'
+      }
+    ])
+
+
     .set('settings.color.duotone', [])
     .set('settings.custom.spacing', {})
     .set('settings.custom.typography.font-size', {})

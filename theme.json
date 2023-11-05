@@ -4,12 +4,24 @@
   "version": 2,
   "settings": {
     "color": {
-      "custom": false,
-      "customGradient": false,
-      "customDuotone": false,
-      "defaultDuotone": false,
-      "defaultGradients": false,
-      "defaultPalette": false,
+      "custom": true,
+      "customGradient": true,
+      "customDuotone": true,
+      "defaultDuotone": true,
+      "defaultGradients": true,
+      "defaultPalette": true,
+      "palette": [
+        {
+          "color": "#e0e0e0",
+          "name": "Base",
+          "slug": "base"
+        },
+        {
+          "color": "#212121",
+          "name": "Accent",
+          "slug": "accent"
+        }
+      ],
       "duotone": []
     },
     "custom": {
@@ -32,7 +44,30 @@
     },
     "typography": {
       "customFontSize": false,
-      "dropCap": false
-    }
+      "dropCap": false,
+      "fontFamilies": [
+        {
+          "fontFamily": "comfortoaa",
+          "name": "Comfortoaa",
+          "slug": "comfortoaa"
+        },
+        {
+          "fontFamily": "sofiapro",
+          "name": "Sofia Pro",
+          "slug": "sofiapro"
+        },
+        {
+          "fontFamily": "tstar",
+          "name": "TStar",
+          "slug": "tstar"
+        },
+        {
+          "fontFamily": "ptmono",
+          "name": "PT Mono",
+          "slug": "ptmono"
+        }
+      ]
+    },
+    "appearanceTools": true
   }
 }

@@ -3,16 +3,12 @@
 @section('page-content')
 <div class="home-container">
     <div class="renderer"></div>
-    <section class="tile main active">
-        <div class="main-headline">
-            {!! $heading !!}
-        </div>
-        <div class="down-arrow"></div>
-    </section>
-    <section class="tile middle">
-    </section>
-    <section class="tile last">
-    </section>
+    <ul class="pagination">
+        <li class="main active"></li>
+        <li class="middle"></li>
+        <li class="last"></li>
+    </ul>
+    @php(the_content())
 </div>
 @endsection
 
@@ -266,63 +262,50 @@
         
     }
 
-    var onTileChanging = (tile) => {
-        if(tile.hasClass('main')) {
-            tile1Animation(window.scene, window.icosphere, window.torus, window.armature);
-        } else if(tile.hasClass('middle')) {
-            tile2Animation(window.scene, window.icosphere, window.torus, window.armature);
-        }
-    }
 
-    var onScrollNext = (event) => {
+    var scrollTile = (tile) => {
         const state = {
             top: $(window).scrollTop()
         };
 
-        const next = nextTile();
-
-        if(!next) return;
         $('.tile.active').removeClass('active');
+        $('.pagination li.active').removeClass('active');
+        tile.addClass('active');
 
-        onTileChanging(next);
+        if(tile.hasClass('main')) {
+            tile1Animation(window.scene, window.icosphere, window.torus, window.armature);
+            $('.pagination li.main').addClass('active');
+        } else if(tile.hasClass('middle')) {
+            tile2Animation(window.scene, window.icosphere, window.torus, window.armature);
+            $('.pagination li.middle').addClass('active');
+        } else if(tile.hasClass('last')) {
+            $('.pagination li.last').addClass('active');
+        }
 
         gsap.to(state, {
-            top: next.position().top,
+            top: tile.position().top,
             duration: 1.5,
             ease: 'ease-in',
             onUpdate: e => {
                 $(window).scrollTop(state.top);
-            },
-            onComplete: e => {
-                next.addClass('active');
             }
-        })
+        });
+    };
+
+    var onScrollNext = (event) => {
+        const next = nextTile();
+        if(!next) return;
+
+        scrollTile(next);
     }
     
 
     var onScrollPrev = (event) => {
-        const state = {
-            top: $(window).scrollTop()
-        };
-
         const next = prevTile();
 
         if(!next) return;
         
-        $('.tile.active').removeClass('active');
-        onTileChanging(next);
-        
-        gsap.to(state, {
-            top: next.position().top - next.offset().top,
-            duration: 1.5,
-            ease: 'ease-in',
-            onUpdate: e => {
-                $(window).scrollTop(state.top);
-            },
-            onComplete: e => {
-                next.addClass('active');
-            }
-        })
+        scrollTile(next);
     }
 
 

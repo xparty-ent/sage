@@ -22,18 +22,25 @@ class Home extends Composer
      */
     public function with()
     {
+        /*
         $post = get_post();
 
         $content = $post->post_content;
 
         $blocks = parse_blocks($content);
 
+        dd($blocks);
+
         $main_heading = current(array_filter($blocks, function($block) {
-            return $block['blockName'] == 'core/heading';
+            return isset($block['attrs']) 
+                && isset($block['attrs']['className'])
+                && $block['attrs']['className'] === 'main-headline';
         })) ?? [];
+        */
+        
 
         return [
-            'heading' => render_block($main_heading)
+            //'heading' => render_block($main_heading)
         ];
     }
 }

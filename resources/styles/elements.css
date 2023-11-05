@@ -1,0 +1,12 @@
+/*
+:where(.wp-block-button__link) {
+    border-radius: 0;
+}
+
+.wp-element-button, .wp-block-button__link {
+    background-color: #bdbdbd;
+    border: 2px solid #212121;
+    color: #212121; 
+    font-family: 'tstar';
+}
+*/
