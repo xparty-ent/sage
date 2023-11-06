@@ -8,31 +8,6 @@
  */
 export default async (app) => {
   /**
-   * Application assets & entrypoints
-   *
-   * @see {@link https://bud.js.org/docs/bud.entry}
-   * @see {@link https://bud.js.org/docs/bud.assets}
-   */
-  app
-    .entry('app', ['@scripts/app', '@styles/app'])
-    .entry('editor', ['@scripts/editor', '@styles/editor'])
-    .entry('xp', ['@scripts/xp'])
-    .entry('scroll', ['@scripts/scroll'])
-    .entry('mouse', ['@scripts/mouse'])
-    .entry('navbar', ['@scripts/navbar'])
-    .assets(['images', 'models'])
-    .provide({
-      jquery: ["jQuery", "$"],
-    });
-  
-  /**
-   * Enable bud sourcemaps
-   * 
-   * @see {@link https://bud.js.org/reference/bud.devtool}
-   */
-  //app.devtool('source-map');
-
-  /**
    * Configure bud hash
    * 
    * @see {@link https://bud.js.org/reference/bud.hash}
@@ -45,6 +20,39 @@ export default async (app) => {
    * @see {@link https://bud.js.org/reference/bud.minimize}
    */
   app.minimize(true);
+
+  /**
+   * Configure chunks splitting
+   * 
+   * @see {@link https://bud.js.org/reference/bud.splitChunks}
+   */
+  app.splitChunks();
+
+  /**
+   * Application assets & entrypoints
+   *
+   * @see {@link https://bud.js.org/docs/bud.entry}
+   * @see {@link https://bud.js.org/docs/bud.assets}
+   */
+  app
+    .hash(false)
+    .entry('app', ['@scripts/app', '@styles/app'])
+    .entry('editor', ['@scripts/editor', '@styles/editor'])
+    .entry('xp', ['@scripts/xp'])
+    .entry('scroll', ['@scripts/scroll'])
+    .entry('mouse', ['@scripts/mouse'])
+    .entry('navbar', ['@scripts/navbar'])
+    .assets(['images', 'models', 'fonts'])
+    .provide({
+      jquery: ["jQuery", "$"],
+    });
+  
+  /**
+   * Enable bud sourcemaps
+   * 
+   * @see {@link https://bud.js.org/reference/bud.devtool}
+   */
+  //app.devtool('source-map');
 
   /**
    * Set public path
