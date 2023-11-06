@@ -33,6 +33,20 @@ export default async (app) => {
   //app.devtool('source-map');
 
   /**
+   * Configure bud hash
+   * 
+   * @see {@link https://bud.js.org/reference/bud.hash}
+   */
+  app.hash(false);
+  
+  /**
+   * Configure bud minification
+   * 
+   * @see {@link https://bud.js.org/reference/bud.minimize}
+   */
+  app.minimize(true);
+
+  /**
    * Set public path
    *
    * @see {@link https://bud.js.org/docs/bud.setPublicPath}
@@ -86,22 +100,38 @@ export default async (app) => {
       {
         fontFamily: "comfortoaa",
         name: 'Comfortoaa',
-        slug: 'comfortoaa'
+        slug: 'comfortoaa',
+        fontFace: [{
+          fontFamily: "comfortoaa",
+          src: ["file:./public/fonts/comfortoaa.ttf"],
+       }],
       },
       {
         fontFamily: "sofiapro",
         name: 'Sofia Pro',
-        slug: 'sofiapro'
+        slug: 'sofiapro',
+        fontFace: [{
+          fontFamily: "sofiapro",
+          src: ["file:./public/fonts/sofiapro.otf"],
+       }],
       },
       {
         fontFamily: "tstar",
         name: 'TStar',
-        slug: 'tstar'
+        slug: 'tstar',
+        fontFace: [{
+          fontFamily: "tstar",
+          src: ["file:./public/fonts/tstar.otf"],
+       }],
       },
       {
         fontFamily: "ptmono",
         name: 'PT Mono',
-        slug: 'ptmono'
+        slug: 'ptmono',
+        fontFace: [{
+          fontFamily: "ptmono",
+          src: ["file:./public/fonts/ptmono.ttf"],
+       }],
       }
     ])
 
