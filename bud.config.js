@@ -28,6 +28,14 @@ export default async (app) => {
    */
   app.splitChunks();
 
+
+  /**
+   * Configure the runtime settings
+   * 
+   * @see {@link https://bud.js.org/learn/config/optimization}
+   */
+  app.runtime();
+
   /**
    * Application assets & entrypoints
    *
@@ -35,7 +43,6 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.assets}
    */
   app
-    .hash(false)
     .entry('app', ['@scripts/app', '@styles/app'])
     .entry('editor', ['@scripts/editor', '@styles/editor'])
     .entry('xp', ['@scripts/xp'])
