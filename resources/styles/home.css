@@ -1,6 +1,6 @@
 .home-container .renderer {
     width: 100%;
-    height: calc(100vh - var(--xp-header-height) - var(--xp-footer-height));
+    height: calc(100vh - var(--xp-header-height));
     position: fixed;
     pointer-events: none;
 }

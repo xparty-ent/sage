@@ -27,6 +27,8 @@
         torusTimeline.clear();
 
         gsap.to(scene.camera.position, {
+            x: 0,
+            y: 0,
             z: 300,
             duration: 5,
             ease: 'back',
@@ -111,6 +113,17 @@
         armatureTimeline.clear();
 
         const posX = scene.getWorldSize().x / 2;
+        
+        gsap.to(scene.camera.position, {
+            x: 0,
+            y: 0,
+            z: 300,
+            duration: 5,
+            ease: 'back',
+            onUpdate: event => {
+                scene.camera.lookAt(0, 0, 0);
+            }
+        });
 
 
         gsap.to(model.gltf.scene.rotation, {
@@ -171,6 +184,52 @@
             z: 2 * Math.PI,
             duration: 30,
             repeat: -1,
+            ease: 'sin'
+        });
+
+        torusTimeline.play();
+        modelTimeline.play();
+        armatureTimeline.play();
+        sceneTimeline.play();
+    }
+
+    
+    var tile3Animation = (scene, model, torus, armature) => {
+        sceneTimeline.clear();
+        modelTimeline.clear();
+        torusTimeline.clear();
+        armatureTimeline.clear();
+
+
+        gsap.to(torus.gltf.scene.position, {
+            x: 0,
+            y: 0,
+            z: -300,
+            duration: 2.5,
+            ease: 'sin'
+        });
+        
+        gsap.to(torus.gltf.scene.rotation, {
+            x: 0,
+            y: 90,
+            z: 0,
+            duration: 2.5,
+            ease: 'sin'
+        });
+
+        gsap.to(icosphere.gltf.scene.position, {
+            x: 0,
+            y: 1,
+            z: 200,
+            duration: 2.5,
+            ease: 'sin'
+        });
+        
+        gsap.to(armature.gltf.scene.position, {
+            x: 0,
+            y: 1,
+            z: 200,
+            duration: 2.5,
             ease: 'sin'
         });
 
@@ -272,7 +331,10 @@
         $('.pagination li.active').removeClass('active');
         tile.addClass('active');
 
+
+        let offset = 0;
         if(tile.hasClass('main')) {
+            offset = $('header').height();
             tile1Animation(window.scene, window.icosphere, window.torus, window.armature);
             $('.pagination li.main').addClass('active');
         } else if(tile.hasClass('middle')) {
@@ -280,10 +342,11 @@
             $('.pagination li.middle').addClass('active');
         } else if(tile.hasClass('last')) {
             $('.pagination li.last').addClass('active');
+            tile3Animation(window.scene, window.icosphere, window.torus, window.armature);
         }
 
         gsap.to(state, {
-            top: tile.position().top,
+            top: tile.position().top - offset,
             duration: 1.5,
             ease: 'ease-in',
             onUpdate: e => {

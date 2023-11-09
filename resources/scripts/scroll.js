@@ -75,7 +75,7 @@ const scroll = {
             this._scrollValue = 0;
         }
 
-        console.log(this._scrollValue);
+        console.log("abs scroll value", this._scrollValue);
     },
 
     _onTouchMove(event) {
@@ -85,6 +85,11 @@ const scroll = {
 
             const deltaX = this._touches[touch.identifier].xp.lastX - touch.screenX;
             const deltaY = this._touches[touch.identifier].xp.lastY - touch.screenY;
+
+            this._touches[touch.identifier].xp.lastX = touch.screenX;
+            this._touches[touch.identifier].xp.lastY = touch.screenY;
+
+            console.log("scroll y", touch.screenY, "delta y", deltaY);
             
             this._onScroll(deltaY);
         }

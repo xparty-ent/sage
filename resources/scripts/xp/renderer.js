@@ -44,6 +44,7 @@ class scene {
             powerPreference: "high-performance"
         });
 
+        this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(this.width, this.height);
         this.element.append(this.renderer.domElement);
         
