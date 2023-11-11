@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class model {
     constructor(gltf) {
@@ -32,7 +30,7 @@ class scene {
         this.element = $(element);
         this.width = this.element.width();
         this.height = this.element.height();
-        this.loader = new GLTFLoader();
+        this.loader = new THREE.GLTFLoader();
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(1, this.width / this.height, 0.1, 100000);
         //this.raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0.1, 100000);
@@ -48,8 +46,10 @@ class scene {
         this.renderer.setSize(this.width, this.height);
         this.element.append(this.renderer.domElement);
         
+        /*
         this.light = new THREE.DirectionalLight(0xffffff, 0.5);
         this.scene.add(this.light);
+        */
 
         this.onResize();
         this.render();
