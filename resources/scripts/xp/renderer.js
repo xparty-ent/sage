@@ -1,4 +1,3 @@
-
 class model {
     constructor(gltf) {
         this.gltf = gltf;

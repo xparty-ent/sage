@@ -1,5 +1,3 @@
-import domReady from "@roots/sage/client/dom-ready";
-
 const scroll = {
     _scrollKeys: [
         32, // spacebar

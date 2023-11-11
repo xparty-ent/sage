@@ -26,7 +26,7 @@ export default async (app) => {
    * 
    * @see {@link https://bud.js.org/reference/bud.splitChunks}
    */
-  app.splitChunks();
+  //app.splitChunks();
 
 
   /**

@@ -1,5 +1,3 @@
-import domReady from '@roots/sage/client/dom-ready';
-import gsap from 'gsap';
 
 const mouse = {
     _pos: { x: 0, y: 0},
