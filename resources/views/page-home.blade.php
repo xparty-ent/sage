@@ -377,21 +377,22 @@
         $(window).on('wheel', event => onWheel(event));
         $(window).on('scroll-next', event => onScrollNext(event));
         $(window).on('scroll-prev', event => onScrollPrev(event));
-        
-        const scene = xp.renderer.create($('.renderer'));
-        window.scene = scene;
-        
-        
-        const torusPromise = createTorus();
-        const spherePromise = createIcosphere();
-        const armaturePromise = createArmature();
 
-        Promise.all([spherePromise, torusPromise, armaturePromise])
-            .then(() => {
-                $(window).scrollTop(0);
-                tile1Animation(scene, window.icosphere, window.torus, window.armature);
-            });
-        
+        setTimeout(() => {
+            const scene = xp.renderer.create($('.renderer'));
+            window.scene = scene;
+            
+            
+            const torusPromise = createTorus();
+            const spherePromise = createIcosphere();
+            const armaturePromise = createArmature();
+
+            Promise.all([spherePromise, torusPromise, armaturePromise])
+                .then(() => {
+                    $(window).scrollTop(0);
+                    tile1Animation(scene, window.icosphere, window.torus, window.armature);
+                });
+        }, 0);
     }
 
     $(window).on('load', () => init());
