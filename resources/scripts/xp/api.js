@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const api = {
     login(username, password, remember_me = false) {
         return new Promise((resolve, reject) => {

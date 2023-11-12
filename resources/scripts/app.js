@@ -1,8 +1,4 @@
 import gsap from 'gsap';
-import axios from 'axios';
-import domReady from '@roots/sage/client/dom-ready';
-
-
 
 // import three classes
 import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
@@ -25,8 +21,6 @@ if (import.meta.webpackHot) import.meta.webpackHot.accept(console.error);
  */
 window.gsap = gsap;
 window.$ = window.jQuery;
-window.axios = axios;
-window.domReady = domReady;
 window.THREE = {
     PerspectiveCamera,
     Scene,

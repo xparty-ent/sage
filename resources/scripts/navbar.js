@@ -1,3 +1,4 @@
+import domReady from "@roots/sage/client/dom-ready";
 
 const navbar = {
     register: () => {
