@@ -373,13 +373,15 @@
     }
 
 
-    const scene = xp.renderer.create($('.renderer'));
-    window.scene = scene;
-            
-            
-    const torusPromise = createTorus();
-    const spherePromise = createIcosphere();
-    const armaturePromise = createArmature();
+    setTimeout(() => {
+        const scene = xp.renderer.create($('.renderer'));
+        window.scene = scene;
+                
+                
+        window.torusPromise = createTorus();
+        window.spherePromise = createIcosphere();
+        window.armaturePromise = createArmature();
+    }, 0);
 
     var init = () => {
         const elements = $('.fade-in');
@@ -390,7 +392,7 @@
 
         setTimeout(() => {
 
-            Promise.all([spherePromise, torusPromise, armaturePromise])
+            Promise.all([window.spherePromise, window.torusPromise, window.armaturePromise])
                 .then(() => {
                     $(window).scrollTop(0);
                     $(window).on('wheel', event => onWheel(event));
@@ -404,7 +406,7 @@
                     $('.home-container').addClass('faded')
                     tile1Animation(scene, window.icosphere, window.torus, window.armature);
                 });
-        }, 0);
+        }, 50);
     }
 
     $(document).ready(() => init());

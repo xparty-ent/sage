@@ -73,7 +73,7 @@ class scene {
         $(this.render.domElement).width(this.width);
         $(this.render.domElement).height(this.height);
     
-        this.renderer.setSize(this.width, this.height);
+        this.renderer.setSize(this.width, this.height, false);
     }
 
     render() {
