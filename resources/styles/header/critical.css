@@ -1,0 +1,11 @@
+a.brand {
+    font-family: comfortoaa;
+    margin-left: 5vh;
+    font-size: 20px;
+    position: absolute;
+    left: 0;
+}
+
+nav.nav-primary .nav a {
+    font-family: tstar;
+}

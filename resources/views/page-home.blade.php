@@ -266,6 +266,7 @@
                     object.material.color.r = 0x21 / 255;
                     object.material.color.g = 0x21 / 255;
                     object.material.color.b = 0x21 / 255;
+                    object.material.size = 2;
                 });
 
                 window.torus = model;
@@ -282,9 +283,9 @@
 
                 model.gltf.scene.traverse(object => {
                     if(!object.material) return;
-                    object.material.emissive.r = 0x21 / 255;
-                    object.material.emissive.g = 0x21 / 255;
-                    object.material.emissive.b = 0x21 / 255;
+                    object.material.emissive.r = 0; //0x21 / 255;
+                    object.material.emissive.g = 0; //0x21 / 255;
+                    object.material.emissive.b = 0; //0x21 / 255;
                 });
 
                 window.icosphere = model;
@@ -374,7 +375,7 @@
     var initFadeInAnimation = () => {
         const elements = $('.fade-in');
         for(let i = 0; i < elements.length; i++) {
-            $(elements[i]).css('transition-delay', `${i * 0.1}s`);
+            $(elements[i]).css('transition-delay', `${(1 + i) * 0.25}s`);
         }
     }
 
@@ -386,6 +387,11 @@
 
         setTimeout(() => {
             const scene = xp.renderer.create($('.renderer'));
+            scene.light.position.x = 1;
+            scene.light.position.y = -1;
+            scene.light.color.r = 1 / 255;
+            scene.light.color.g = 205 / 255;
+            scene.light.color.b = 254 / 255;
             window.scene = scene;
             
             

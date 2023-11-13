@@ -46,10 +46,9 @@ class scene {
         this.renderer.setSize(this.width, this.height);
         this.element.append(this.renderer.domElement);
         
-        /*
-        this.light = new THREE.DirectionalLight(0xffffff, 0.5);
+        this.light = new THREE.DirectionalLight(0xff0000, 1);
         this.scene.add(this.light);
-        */
+        
 
         this.onResize();
         this.render();

@@ -22,6 +22,15 @@ add_action('wp_enqueue_scripts', function () {
 }, 100);
 
 /**
+ * Register the critical assets.
+ * 
+ * @return void
+ */
+add_action('wp_head', function() {
+    echo "<style>".asset('css/critical.css')->contents()."</style>";
+});
+
+/**
  * Register the theme assets with the block editor.
  *
  * @return void

@@ -7,8 +7,7 @@ import { Vector3 } from 'three/src/math/Vector3.js';
 import { Vector2 } from 'three/src/math/Vector2.js';
 import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-//import { DirectionalLight } from 'three/src/lights/DirectionalLight.js';
+import { DirectionalLight } from 'three/src/lights/DirectionalLight.js';
 
 
 /**
@@ -27,6 +26,6 @@ window.THREE = {
     Vector2,
     Vector3,
     WebGLRenderer,
-    GLTFLoader
-    //DirectionalLight
+    GLTFLoader,
+    DirectionalLight
 };

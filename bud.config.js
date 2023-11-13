@@ -43,12 +43,15 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.assets}
    */
   app
-    .entry('app', ['@scripts/app', '@styles/app'])
-    .entry('editor', ['@scripts/editor', '@styles/editor'])
-    .entry('xp', ['@scripts/xp'])
-    .entry('scroll', ['@scripts/scroll'])
-    .entry('mouse', ['@scripts/mouse'])
-    .entry('navbar', ['@scripts/navbar'])
+    .entry({
+      app: ['@scripts/app', '@styles/app'],
+      editor: ['@scripts/editor', '@styles/editor'],
+      xp: ['@scripts/xp'],
+      scroll: ['@scripts/scroll'],
+      mouse: ['@scripts/mouse'],
+      navbar: ['@scripts/navbar'],
+      critical: ['@styles/critical']
+    })
     .assets(['images', 'models', 'fonts'])
     .provide({
       jquery: ["jQuery", "$"],
