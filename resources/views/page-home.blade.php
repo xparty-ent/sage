@@ -371,12 +371,18 @@
         scrollTile(next);
     }
 
+    var initFadeInAnimation = () => {
+        const elements = $('.fade-in');
+        for(let i = 0; i < elements.length; i++) {
+            $(elements[i]).css('transition-delay', `${i * 0.1}s`);
+        }
+    }
+
 
     var init = () => {
+        initFadeInAnimation();
+
         window.scroll.disable();
-        $(window).on('wheel', event => onWheel(event));
-        $(window).on('scroll-next', event => onScrollNext(event));
-        $(window).on('scroll-prev', event => onScrollPrev(event));
 
         setTimeout(() => {
             const scene = xp.renderer.create($('.renderer'));
@@ -390,12 +396,16 @@
             Promise.all([spherePromise, torusPromise, armaturePromise])
                 .then(() => {
                     $(window).scrollTop(0);
+                    $(window).on('wheel', event => onWheel(event));
+                    $(window).on('scroll-next', event => onScrollNext(event));
+                    $(window).on('scroll-prev', event => onScrollPrev(event));
+                    $('.home-container').addClass('faded')
                     tile1Animation(scene, window.icosphere, window.torus, window.armature);
                 });
         }, 0);
     }
 
-    $(window).on('load', () => init());
+    $(document).ready(() => init());
 }());
 </script>
 @endpush
