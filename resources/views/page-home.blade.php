@@ -372,32 +372,23 @@
         scrollTile(next);
     }
 
-    var initFadeInAnimation = () => {
+
+    const scene = xp.renderer.create($('.renderer'));
+    window.scene = scene;
+            
+            
+    const torusPromise = createTorus();
+    const spherePromise = createIcosphere();
+    const armaturePromise = createArmature();
+
+    var init = () => {
         const elements = $('.fade-in');
         for(let i = 0; i < elements.length; i++) {
             $(elements[i]).css('transition-delay', `${(1 + i) * 0.25}s`);
         }
-    }
-
-
-    var init = () => {
-        initFadeInAnimation();
-
         window.scroll.disable();
 
         setTimeout(() => {
-            const scene = xp.renderer.create($('.renderer'));
-            scene.light.position.x = 1;
-            scene.light.position.y = -1;
-            scene.light.color.r = 1 / 255;
-            scene.light.color.g = 205 / 255;
-            scene.light.color.b = 254 / 255;
-            window.scene = scene;
-            
-            
-            const torusPromise = createTorus();
-            const spherePromise = createIcosphere();
-            const armaturePromise = createArmature();
 
             Promise.all([spherePromise, torusPromise, armaturePromise])
                 .then(() => {
@@ -405,6 +396,11 @@
                     $(window).on('wheel', event => onWheel(event));
                     $(window).on('scroll-next', event => onScrollNext(event));
                     $(window).on('scroll-prev', event => onScrollPrev(event));
+                    window.scene.light.position.x = 1;
+                    window.scene.light.position.y = -1;
+                    window.scene.light.color.r = 1 / 255;
+                    window.scene.light.color.g = 205 / 255;
+                    window.scene.light.color.b = 254 / 255;
                     $('.home-container').addClass('faded')
                     tile1Animation(scene, window.icosphere, window.torus, window.armature);
                 });
