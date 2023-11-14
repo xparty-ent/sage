@@ -49,7 +49,7 @@ export default async (app) => {
       xp: ['@scripts/xp'],
       scroll: ['@scripts/scroll'],
       mouse: ['@scripts/mouse'],
-      navbar: ['@scripts/navbar'],
+      navbar: ['@scripts/navbar', '@styles/navbar/navbar'],
       critical: ['@styles/critical']
     })
     .assets(['images', 'models', 'fonts'])
