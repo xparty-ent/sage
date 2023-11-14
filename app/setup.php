@@ -14,6 +14,11 @@ use function Roots\bundle;
  * @return void
  */
 add_action('wp_enqueue_scripts', function () {
+    $critical = asset('css/critical.css');
+    if(!@file_exists($critical->path())) {
+        bundle('critical')->enqueue();
+    }
+    
     bundle('app')->enqueue();
     bundle('xp')->enqueue();
     bundle('scroll')->enqueue();
@@ -27,7 +32,10 @@ add_action('wp_enqueue_scripts', function () {
  * @return void
  */
 add_action('wp_head', function() {
-    echo "<style>".asset('css/critical.css')->contents()."</style>";
+    $asset = asset('css/critical.css');
+    if(@file_exists($asset->path())) {
+        echo "<style>" . $asset->contents() . "</style>";
+    }
 });
 
 /**
