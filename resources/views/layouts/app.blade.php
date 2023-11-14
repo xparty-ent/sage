@@ -1,22 +1,46 @@
+<!doctype html>
+<html @php(language_attributes())>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @php(wp_head())
+  </head>
+  <body @php(body_class())>
 
-@include('sections.mouse')
+    <!-- WP Start -->
+    @php(wp_body_open())
+    
+    @if(!isset($hideHeader) || !$hideHeader)
+      @php(do_action('get_header'))
+    @endif
+    <!-- WP End -->
 
-@if(!isset($hide_header) || !$hide_header)
-  @include('sections.header')
-@endif
 
-  <main id="main" @class(["main", "header-hidden" => isset($hide_header) && $hide_header, "footer-hidden" => isset($hide_footer) && $hide_footer])>
-    @yield('page-content')
-  </main>
+    <div id="app">
+      @include('sections.mouse')
 
-  @hasSection('sidebar')
-    <aside class="sidebar">
-      @yield('sidebar')
-    </aside>
-  @endif
+      <main id="main" @class(["main", "header-hidden" => isset($hideHeader) && $hideHeader, "footer-hidden" => isset($hideFooter) && $hideFooter])>
+        @yield('page-content')
+      </main>
 
-@if(!isset($hide_footer) || !$hide_footer)
-  @include('sections.footer')
-@endif
+      @hasSection('sidebar')
+        <aside class="sidebar">
+          @yield('sidebar')
+        </aside>
+      @endif
+      
+    </div>
 
-@stack('post-app-script')
+    @stack('post-app-script')
+
+    <!-- WP Start -->
+    @if(!isset($hideFooter) || !$hideFooter)
+      @php(do_action('get_footer'))
+    @endif
+
+    @php(wp_footer())
+    <!-- WP End -->
+
+  </body>
+</html>
+

@@ -21,5 +21,15 @@
             break;
     }
 }
- 
+
+function xp_get_header() {
+    echo view('sections.header');
+}
+
+function xp_get_footer() {
+    echo view('sections.footer');
+}
+
+add_action('get_header', 'xp_get_header');
+add_action('get_footer', 'xp_get_footer');
 add_action('template_redirect', 'xp_template_redirects');

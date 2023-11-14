@@ -8,34 +8,40 @@
  */
 export default async (app) => {
   /**
-   * Configure bud hash
+   * Apply production-only settings
    * 
-   * @see {@link https://bud.js.org/reference/bud.hash}
+   * @see {@link https://bud.js.org/reference/bud.when}
    */
-  app.hash(false);
+  app.when(app.isProduction, 
+    /**
+     * Configure bud hash
+     * 
+     * @see {@link https://bud.js.org/reference/bud.hash}
+     */
+    () => app.hash(false),
+
+    /**
+     * Configure bud minification
+     * 
+     * @see {@link https://bud.js.org/reference/bud.minimize}
+     */
+    () => app.minimize(true),
+
+    /**
+     * Configure chunks splitting
+     * 
+     * @see {@link https://bud.js.org/reference/bud.splitChunks}
+     */
+    () => app.splitChunks(),
+
+    /**
+     * Configure the runtime settings
+     * 
+     * @see {@link https://bud.js.org/learn/config/optimization}
+     */
+    () => app.runtime()
+  );
   
-  /**
-   * Configure bud minification
-   * 
-   * @see {@link https://bud.js.org/reference/bud.minimize}
-   */
-  app.minimize(true);
-
-  /**
-   * Configure chunks splitting
-   * 
-   * @see {@link https://bud.js.org/reference/bud.splitChunks}
-   */
-  app.splitChunks();
-
-
-  /**
-   * Configure the runtime settings
-   * 
-   * @see {@link https://bud.js.org/learn/config/optimization}
-   */
-  app.runtime();
-
   /**
    * Application assets & entrypoints
    *
@@ -44,13 +50,14 @@ export default async (app) => {
    */
   app
     .entry({
-      app: ['@scripts/app', '@styles/app'],
+      app: ['@scripts/app', '@styles/app', ...(await app.glob(`@views/**/*.blade.php`))],
       editor: ['@scripts/editor', '@styles/editor'],
       xp: ['@scripts/xp'],
       scroll: ['@scripts/scroll'],
       mouse: ['@scripts/mouse'],
-      navbar: ['@scripts/navbar', '@styles/navbar/navbar'],
-      critical: ['@styles/critical']
+      header: ['@scripts/header', '@styles/header/header'],
+      critical: ['@styles/critical'],
+      home: ['@scripts/home', '@styles/home/home']
     })
     .assets(['images', 'models', 'fonts'])
     .provide({

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'hide_header' => $interim_login,
-    'hide_footer' => $interim_login
+    'hideHeader' => $interim_login,
+    'hideFooter' => $interim_login
 ])
 
 @section('page-content')

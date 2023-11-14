@@ -8,11 +8,23 @@
         <li class="middle"></li>
         <li class="last"></li>
     </ul>
+    <link id="icosphere-model">
     @php(the_content())
 </div>
 @endsection
 
 @push('post-app-script')
+<script>
+(function() {
+    window.home = window.home || {};
+    window.home.icosphere = '{{ $icosphere }}';
+    window.home.torus = '{{ $torus }}';
+    window.home.armature = '{{ $armature }}';
+}());
+</script>
+@endpush
+
+@push('post-app-script-1')
 <script type="module">
 (function() {
     const sceneTimeline = gsap.timeline();

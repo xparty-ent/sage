@@ -1,11 +1,20 @@
 
+// import three classes
+import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
+import { Scene } from 'three/src/scenes/Scene.js';
+import { Vector3 } from 'three/src/math/Vector3.js';
+import { Vector2 } from 'three/src/math/Vector2.js';
+import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DirectionalLight } from 'three/src/lights/DirectionalLight.js';
+
 class model {
     constructor(gltf) {
         this.gltf = gltf;
     }
 
     getSize(camera) {
-        var vector = new THREE.Vector3();
+        var vector = new Vector3();
 
         var widthHalf = 0.5;
         var heightHalf = 0.5;
@@ -30,12 +39,12 @@ class scene {
         this.element = $(element);
         this.width = this.element.width();
         this.height = this.element.height();
-        this.loader = new THREE.GLTFLoader();
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(1, this.width / this.height, 0.1, 100000);
+        this.loader = new GLTFLoader();
+        this.scene = new Scene();
+        this.camera = new PerspectiveCamera(1, this.width / this.height, 0.1, 100000);
         //this.raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0.1, 100000);
 
-        this.renderer = new THREE.WebGLRenderer({
+        this.renderer = new WebGLRenderer({
             alpha: true,
             antialias: true,
             precision: "highp",
@@ -46,7 +55,7 @@ class scene {
         this.renderer.setSize(this.width, this.height);
         this.element.append(this.renderer.domElement);
         
-        this.light = new THREE.DirectionalLight(0xff0000, 1);
+        this.light = new DirectionalLight(0xff0000, 1);
         this.scene.add(this.light);
         
 
@@ -57,7 +66,7 @@ class scene {
     getWorldSize() {
         const fov = (this.camera.fov * Math.PI) / 180;
         const h = 2 * Math.tan(fov / 2) * Math.abs(this.camera.position.z);
-        return new THREE.Vector2(
+        return new Vector2(
             h * this.camera.aspect,
             h
         );
@@ -98,7 +107,7 @@ class scene {
     }
 
     addModel(path) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.loadModel(path).then(model => {
                 this.scene.add(model.gltf.scene);
                 resolve(model);

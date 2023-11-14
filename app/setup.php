@@ -14,6 +14,7 @@ use function Roots\bundle;
  * @return void
  */
 add_action('wp_enqueue_scripts', function () {
+    // load critical assets bundle
     $critical = asset('css/critical.css');
     if(!@file_exists($critical->path())) {
         bundle('critical')->enqueue();
@@ -23,7 +24,12 @@ add_action('wp_enqueue_scripts', function () {
     bundle('xp')->enqueue();
     bundle('scroll')->enqueue();
     bundle('mouse')->enqueue();
-    bundle('navbar')->enqueue();
+    bundle('header')->enqueue();
+
+    // load home bundle
+    if(is_front_page()) {
+        bundle('home')->enqueue();
+    }
 }, 100);
 
 /**
