@@ -2,7 +2,7 @@
     width: 100%;
     height: calc(100vh - var(--xp-header-height));
     position: fixed;
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 
 .home-container {

@@ -7,10 +7,13 @@ import { Vector2 } from 'three/src/math/Vector2.js';
 import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DirectionalLight } from 'three/src/lights/DirectionalLight.js';
+import { Raycaster } from 'three/src/core/Raycaster.js';
 
 class model {
     constructor(gltf) {
         this.gltf = gltf;
+        this.uuid = this.gltf.scene.uuid;
+        this.intersect = false;
     }
 
     getSize(camera) {
@@ -42,7 +45,9 @@ class scene {
         this.loader = new GLTFLoader();
         this.scene = new Scene();
         this.camera = new PerspectiveCamera(1, this.width / this.height, 0.1, 100000);
-        //this.raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0.1, 100000);
+        this.raycaster = new Raycaster(/*new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0.1, 100000*/);
+        this.pointer = new Vector2(-1, -1);
+        this.models = {};
 
         this.renderer = new WebGLRenderer({
             alpha: true,
@@ -55,12 +60,14 @@ class scene {
         this.renderer.setSize(this.width, this.height);
         this.element.append(this.renderer.domElement);
         
-        this.light = new DirectionalLight(0xff0000, 1);
+        this.light = new DirectionalLight(0x05ffa1, 1);
         this.scene.add(this.light);
         
 
         this.onResize();
         this.render();
+        this.element.on('mousemove', event => this._updatePointer(event.pageX, event.pageY));
+
     }
 
     getWorldSize() {
@@ -79,16 +86,51 @@ class scene {
         this.camera.aspect = this.width / this.height;
         this.camera.updateProjectionMatrix();
 
-        $(this.render.domElement).width(this.width);
-        $(this.render.domElement).height(this.height);
+        this.element.width(this.width);
+        this.element.height(this.height);
     
-        this.renderer.setSize(this.width, this.height, false);
+        this.renderer.setSize(this.width, this.height);
+    }
+    
+    _updatePointer(x, y) {
+        const win = $(window);
+        const offset = this.element.offset();
+        const pX = x - offset.left + win.scrollLeft();
+        const pY = y - offset.top + win.scrollTop();
+        const nX = (pX / this.width) * 2 - 1;
+        const nY = -(pY / this.height) * 2 + 1;
+        this.pointer.set(nX, nY);
+    }
+
+    _updateRaycast() {
+        this.raycaster.setFromCamera(this.pointer, this.camera);
+
+        const intersects = this.raycaster.intersectObjects(this.scene.children);
+
+        Object.values(this.models).forEach(instance => {
+            instance.intersect = false;
+        });
+
+        intersects.forEach(ray => {
+            var object = ray.object;
+            while(object.type !== 'Group' && object.name !== 'Scene')
+                object = object.parent;
+
+            const uuid = object.uuid;
+
+            if(!this.models.hasOwnProperty(uuid)) return;
+
+            this.models[uuid].intersect = true;
+        });
+
     }
 
     render() {
         if(this.width != this.element.width() || this.height != this.element.height())
             this.onResize();
-        
+
+        this._updateRaycast();
+
         this.renderer.render(this.scene, this.camera);
         window.requestAnimationFrame(() => this.render());
     }
@@ -101,7 +143,10 @@ class scene {
                     return;
                 }
 
-                resolve(new model(gltf));
+                const instance = new model(gltf);
+                this.models[instance.uuid] = instance;
+
+                resolve(instance);
             });
         });
     }

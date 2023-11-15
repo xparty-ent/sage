@@ -3,6 +3,10 @@
 @import 'login.css';
 @import 'elements.css';
 
+@import 'header/header.css';
+@import 'mouse/mouse.css';
+@import 'animations/animations.css';
+
 html {
     margin-top: 0 !important;
 }

@@ -50,12 +50,9 @@ export default async (app) => {
    */
   app
     .entry({
-      app: ['@scripts/app', '@styles/app', ...(await app.glob(`@views/**/*.blade.php`))],
+      app: ['@scripts/app', '@styles/app'],
       editor: ['@scripts/editor', '@styles/editor'],
-      xp: ['@scripts/xp'],
-      scroll: ['@scripts/scroll'],
-      mouse: ['@scripts/mouse'],
-      header: ['@scripts/header', '@styles/header/header'],
+      animations: ['@scripts/animations', '@styles/animations'],
       critical: ['@styles/critical'],
       home: ['@scripts/home', '@styles/home/home']
     })
@@ -85,10 +82,17 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.setProxyUrl}
    * @see {@link https://bud.js.org/docs/bud.watch}
    */
-  app
-    .setUrl('http://localhost:80')
-    .setProxyUrl('http://example.test')
-    .watch(['resources/views', 'app']);
+  app.when(app.isDevelopment, 
+    () => app.setUrl('http://localhost:3000'),
+    () => app.setPublicUrl('http://localhost:3000'),
+    () => app.setProxyUrl('http://localhost'),
+    () => app.serve('http://localhost:3000'),
+    () => app.warn([
+      'resources/views', 
+      'app'
+    ]),
+    () => app.set
+  );
 
 
   /**

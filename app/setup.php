@@ -21,10 +21,7 @@ add_action('wp_enqueue_scripts', function () {
     }
     
     bundle('app')->enqueue();
-    bundle('xp')->enqueue();
-    bundle('scroll')->enqueue();
-    bundle('mouse')->enqueue();
-    bundle('header')->enqueue();
+    bundle('animations')->enqueue();
 
     // load home bundle
     if(is_front_page()) {

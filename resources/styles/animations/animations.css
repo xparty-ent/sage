@@ -1,0 +1,4 @@
+body.faded .fade-in {
+    transform: translateY(0);
+    opacity: 1;
+}
