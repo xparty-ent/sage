@@ -48,13 +48,13 @@ const scroll = {
     },
 
     _onScroll(delta) {
-        if(!this._clearTimeout)
+        if(this._clearTimeout) {
             clearTimeout(this._clearTimeout);
+        }
 
-        setTimeout(() => {
-            $(window).trigger('scroll-trigger-reset');
-            this._scrollValue = 0;
-        }, 1000);
+        this._clearTimeout = setTimeout(() => {
+            $(window).trigger('scroll-value', this._scrollValue = 0);
+        }, 1500);
 
         if(this._scrollValue > 0 && delta < 0) {
             this._scrollValue = 0;
@@ -75,7 +75,8 @@ const scroll = {
             this._scrollValue = 0;
         }
 
-        console.log("abs scroll value", this._scrollValue);
+        $(window).trigger('scroll-value', Math.min(1, Math.abs(this._scrollValue) / this._scrollThreshold));
+
     },
 
     _onTouchMove(event) {
@@ -186,8 +187,4 @@ const scroll = {
     }
 };
 
-domReady(() => {
-    scroll.register();
-});
-
-window.scroll = scroll;
+export default scroll;

@@ -46,8 +46,4 @@ const mouse = {
     }
 };
 
-domReady(() => {
-    mouse.register();
-});
-
-window.mouse = mouse;
+export default mouse;

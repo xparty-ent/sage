@@ -1,0 +1,10 @@
+.home-container .tile .fade-in {
+    transform: translateY(-5%);
+    opacity: 0;
+    transition: all 0.5s ease-in;
+}
+
+.home-container .renderer {
+    opacity: 0;
+    transition: all 0.5s ease-in;
+}

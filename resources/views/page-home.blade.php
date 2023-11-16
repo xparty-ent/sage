@@ -2,13 +2,13 @@
 
 @section('page-content')
 <div class="home-container">
-    <div class="renderer"></div>
+    <div class="renderer fade-in"></div>
+    <div class="scroll"></div>
     <ul class="pagination">
         <li class="main active"></li>
         <li class="middle"></li>
         <li class="last"></li>
     </ul>
-    <link id="icosphere-model">
     @php(the_content())
 </div>
 @endsection
