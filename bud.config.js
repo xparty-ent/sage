@@ -52,7 +52,7 @@ export default async (app) => {
     .entry({
       app: ['@scripts/app', '@styles/app'],
       editor: ['@scripts/editor', '@styles/editor'],
-      animations: ['@scripts/animations', '@styles/animations'],
+      //animations: ['@scripts/animations', '@styles/animations'],
       critical: ['@styles/critical'],
       home: ['@scripts/home', '@styles/home/home']
     })

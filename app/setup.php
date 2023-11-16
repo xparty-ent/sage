@@ -21,7 +21,7 @@ add_action('wp_enqueue_scripts', function () {
     }
     
     bundle('app')->enqueue();
-    bundle('animations')->enqueue();
+    //bundle('animations')->enqueue();
 
     // load home bundle
     if(is_front_page()) {
