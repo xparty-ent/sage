@@ -65,6 +65,8 @@ const scroll = {
         }
 
         this._scrollValue += delta;
+        
+        $(window).trigger('scroll-value', Math.min(1, Math.abs(this._scrollValue) / this._scrollThreshold));
 
         if(Math.abs(this._scrollValue) > this._scrollThreshold) {
             if(this._scrollValue > 0) {
@@ -74,9 +76,6 @@ const scroll = {
             }
             this._scrollValue = 0;
         }
-
-        $(window).trigger('scroll-value', Math.min(1, Math.abs(this._scrollValue) / this._scrollThreshold));
-
     },
 
     _onTouchMove(event) {

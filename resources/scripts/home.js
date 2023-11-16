@@ -173,8 +173,7 @@ const home = {
     _scrollValue(value) {
         console.log(value);
         gsap.to($('.scroll'), {
-            width: Math.max(outerPosition.x, (this._mouseOuterElement.width() / 2) + 1),
-            top: Math.max(outerPosition.y, (this._mouseOuterElement.height() / 2) + 1),
+            width: `${value * 100}vw`,
             duration: 0.5,
             ease: 'ease-in'
         });

@@ -1,4 +1,4 @@
-import '@scripts/xp';
+import xp from '@scripts/xp';
 import mouse from '@scripts/mouse';
 import '@scripts/header';
 
@@ -11,8 +11,10 @@ if (import.meta.webpackHot) import.meta.webpackHot.accept(console.error);
  * libraries
  */
 window.$ = window.jQuery;
+window.xp = xp;
 
 /**
  * custom libraries
  */
+xp.register();
 mouse.register();
