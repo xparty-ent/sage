@@ -27,6 +27,8 @@ const home = {
 
     _renderer: null,
 
+    _changingSlide: false,
+
     _runRendererAnimation() {
         // init vars
         this._renderer.camera.position.set(0, 0, 0);
@@ -132,6 +134,9 @@ const home = {
             top: $(window).scrollTop()
         };
 
+        this._scrollValue(1);
+
+        this._changingSlide = true;
         $('.tile.active').removeClass('active');
         $('.pagination li.active').removeClass('active');
 
@@ -159,9 +164,13 @@ const home = {
             ease: 'ease-in',
             onUpdate: () => {
                 $(window).scrollTop(state.top);
+                scroll.reset();
             },
             onComplete: () => {
+                this._changingSlide = false;
                 tile.addClass('active');
+                this._scrollValue(0);
+                scroll.reset();
                 if(showRenderer) {
                     this._runRendererAnimation();
                     $('.renderer').addClass('faded');
@@ -171,7 +180,11 @@ const home = {
     },
 
     _scrollValue(value) {
-        console.log(value);
+        if(this._changingSlide) {
+            scroll.reset();
+            return;
+        }
+
         gsap.to($('.scroll'), {
             width: `${value * 100}vw`,
             duration: 0.5,
@@ -201,7 +214,7 @@ const home = {
                     object.material.color.r = 0x21 / 255;
                     object.material.color.g = 0x21 / 255;
                     object.material.color.b = 0x21 / 255;
-                    object.material.size = 1;
+                    object.material.size = 1.5;
                 });
 
                 this._torus = torus;
@@ -285,6 +298,8 @@ const home = {
     },
     
     register() {
+        scroll.register();
+        xp.register();
         scroll.disable();
         this._createFadeAnimations();
         this._createRenderer()
@@ -295,7 +310,5 @@ const home = {
 
 domReady(() => {
     home.register();
-    scroll.register();
-    xp.register();
     console.log('[home] registered');
 });

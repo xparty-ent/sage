@@ -129,6 +129,5 @@
     height: 2px;
     position: fixed;
     background: #212121;
-    transition: width 0.75s cubic-bezier(0.18, 0.89, 0.22, 0.99);
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }

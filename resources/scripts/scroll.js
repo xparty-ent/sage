@@ -48,13 +48,15 @@ const scroll = {
     },
 
     _onScroll(delta) {
+        const win = $(window);
+
         if(this._clearTimeout) {
             clearTimeout(this._clearTimeout);
         }
 
         this._clearTimeout = setTimeout(() => {
-            $(window).trigger('scroll-value', this._scrollValue = 0);
-        }, 1500);
+            win.trigger('scroll-value', this._scrollValue = 0);
+        }, 200);
 
         if(this._scrollValue > 0 && delta < 0) {
             this._scrollValue = 0;
@@ -66,16 +68,23 @@ const scroll = {
 
         this._scrollValue += delta;
         
-        $(window).trigger('scroll-value', Math.min(1, Math.abs(this._scrollValue) / this._scrollThreshold));
+        win.trigger('scroll-value', Math.min(1, Math.abs(this._scrollValue) / this._scrollThreshold));
 
         if(Math.abs(this._scrollValue) > this._scrollThreshold) {
             if(this._scrollValue > 0) {
-                $(window).trigger('scroll-next');
+                win.trigger('scroll-next');
             } else {
-                $(window).trigger('scroll-prev');
+                win.trigger('scroll-prev');
             }
             this._scrollValue = 0;
         }
+    },
+
+    reset() {
+        this._scrollValue = 0;
+        if(this._clearTimeout)
+            clearTimeout(this._clearTimeout);
+        this._clearTimeout = null;
     },
 
     _onTouchMove(event) {
@@ -91,7 +100,7 @@ const scroll = {
 
             console.log("scroll y", touch.screenY, "delta y", deltaY);
             
-            this._onScroll(deltaY);
+            this._onScroll(deltaY * 1.5);
         }
     },
 
