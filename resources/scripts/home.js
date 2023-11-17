@@ -9,13 +9,17 @@ const CAMERA_POSITION = { x: 0, y: 0, z: 600, duration: 5, delay: 0, ease: 'back
 const TORUS_ROTATION = { x: Math.PI, y: Math.PI, z: Math.PI, duration: 15, delay: 0, ease: 'power1.inOut', repeat: -1 };
 const TORUS_POSITION = { x: 0, y: 0, z: -75, duration: 3, delay: 5, ease: 'ease', repeat: -1, yoyo: true };
 const TORUS_SCALE = { x: 2, y: 2, z: 2, duration: 5, delay: 0, ease: 'power1.inOut', repeat: 0 };
+const TORUS_HOVER_SCALE = { x: 1.75, y: 1.75, z: 1.75, duration: 1, delay: 0, ease: 'ease', repeat: 0, yoyo: false };
 
 const ICOSPHERE_ROTATION = { x: Math.PI, y: Math.PI, z: Math.PI, duration: 5, delay: 0, ease: 'none', repeat: -1 };
 const ICOSPHERE_POSITION = { x: 0, y: 0, z: -75, duration: 3, delay: 5, ease: 'ease', repeat: -1, yoyo: true };
+const ICOSPHERE_SCALE = { x: 1, y: 1, z: 1, duration: 0.50, delay: 0, ease: 'ease', repeat: 0, yoyo: false };
+const ICOSPHERE_HOVER_SCALE = { x: 1.25, y: 1.25, z: 1.25, duration: 1, delay: 0, ease: 'ease', repeat: 0, yoyo: false };
 
 const ARMATURE_ROTATION = { x: Math.PI, y: Math.PI, z: Math.PI, duration: 10, delay: 0, ease: 'none', repeat: -1 };
-const ARMATURE_SCALE = { x: 1.25, y: 1.25, z: 1.25, duration: 2.5, delay: 0.5, ease: 'none', repeat: 0 };
 const ARMATURE_POSITION = { x: 0, y: 0, z: -75, duration: 3, delay: 5, ease: 'ease', repeat: -1, yoyo: true };
+const ARMATURE_SCALE = { x: 1.25, y: 1.25, z: 1.25, duration: 2.5, delay: 0.5, ease: 'none', repeat: 0 };
+const ARMATURE_HOVER_SCALE = { x: 1.50, y: 1.50, z: 1.50, duration: 1, delay: 0, ease: 'ease', repeat: 0, yoyo: false };
 
 const LIGHT_POSITION = { x: 1, y: -1, z: 0, duration: 5, delay: 0.5, ease: 'none', repeat: 0 };
 const LIGHT_COLOR = { r: 0, g: 0.8, b: 1, duration: 5, delay: 1, ease: 'none', repeat: 0 };
@@ -24,6 +28,9 @@ const home = {
     _icosphere: null,
     _torus: null,
     _armature: null,
+
+    _mainTimeline: null,
+    _hoverTimeline: null,
 
     _renderer: null,
 
@@ -37,57 +44,16 @@ const home = {
         this._torus.gltf.scene.scale.set(1, 1, 1);
         this._icosphere.gltf.scene.rotation.set(0, 0, 0);
         this._icosphere.gltf.scene.position.set(0, 0, 0);
+        this._icosphere.gltf.scene.scale.set(1, 1, 1);
         this._armature.gltf.scene.rotation.set(0, 0, 0);
         this._armature.gltf.scene.scale.set(1, 1, 1);
         this._armature.gltf.scene.position.set(0, 0, 0);
         this._renderer.light.color.set(0, 1, 0.63);
         this._renderer.light.position.set(0, 1, 0);
 
-        // camera animation
-        gsap.to(this._renderer.camera.position, {
-            ...CAMERA_POSITION,
-            onUpdate: () => this._renderer.camera.lookAt(0, 0, 0)
-        });
-
-        // torus rotation animation
-        gsap.to(this._torus.gltf.scene.rotation, {
-            ...TORUS_ROTATION
-        });
-
-        // torus position animation
-        gsap.to(this._torus.gltf.scene.position, {
-            ...TORUS_POSITION
-        });
-
-        // torus scale animation
-        gsap.to(this._torus.gltf.scene.scale, {
-            ...TORUS_SCALE
-        });
-
-        // icosphere rotation animation
-        gsap.to(this._icosphere.gltf.scene.rotation, {
-           ...ICOSPHERE_ROTATION
-        });
-
-        // icosphere position animation
-        gsap.to(this._icosphere.gltf.scene.position, {
-            ...ICOSPHERE_POSITION
-        });
-
-        // armature rotation animation
-        gsap.to(this._armature.gltf.scene.rotation, {
-            ...ARMATURE_ROTATION
-        });
-
-        // armature scale animation
-        gsap.to(this._armature.gltf.scene.scale, {
-            ...ARMATURE_SCALE
-        });
-
-        // armature position animation
-        gsap.to(this._armature.gltf.scene.position, {
-            ...ARMATURE_POSITION
-        });
+        this._hoverTimeline.pause();
+        this._mainTimeline.seek('main');
+        this._mainTimeline.play();
 
         // light position animation
         gsap.to(this._renderer.light.position, {
@@ -98,6 +64,13 @@ const home = {
         gsap.to(this._renderer.light.color, {
             ...LIGHT_COLOR
         });
+
+        // camera animation
+        gsap.to(this._renderer.camera.position, {
+            ...CAMERA_POSITION,
+            onUpdate: () => this._renderer.camera.lookAt(0, 0, 0)
+        });
+
     },
 
     
@@ -236,35 +209,92 @@ const home = {
     },
 
     _onRendererMouseMove(event) {
-        this._icosphere.gltf.scene.traverse(object => {
-            if(!object.material) return;
+        const intersect = this._icosphere.intersect || this._armature.intersect;
+        const drag = this._icosphere.drag || this._armature.drag;
 
-            if(this._icosphere.intersect) {
-                object.material.emissive.r = 255;
-            } else {
-                object.material.emissive.r = 0;
-            }
-        });
-        
-        this._torus.gltf.scene.traverse(object => {
-            if(!object.material) return;
-            
-            if(this._torus.intersect) {
-                object.material.color.r = 255;
-            } else {
-                object.material.color.r = 0;
-            }
-        });
-        
-        this._armature.gltf.scene.traverse(object => {
-            if(!object.material) return;
-            
-            if(this._armature.intersect) {
-                object.material.color.r = 255;
-            } else {
-                object.material.color.r = 0;
-            }
-        });
+        if(intersect && this._hoverTimeline.paused()) {
+            //this._mainTimeline.pause();
+            this._hoverTimeline.resume();
+        } else if(!intersect && !drag && !this._hoverTimeline.paused()) {
+            this._hoverTimeline.tweenTo(0, {
+                duration: 0.5
+            });
+        }
+    },
+
+    _createIcosphereAnimations() {
+        this._hoverTimeline.to(this._icosphere.gltf.scene.scale, {
+           ...ICOSPHERE_HOVER_SCALE
+        }, 'main');
+
+        this._mainTimeline.to(this._icosphere.gltf.scene.rotation, {
+            ...ICOSPHERE_ROTATION
+         }, 'main');
+ 
+         this._mainTimeline.to(this._icosphere.gltf.scene.position, {
+             ...ICOSPHERE_POSITION
+         }, 'main');
+
+         /*
+         this._mainTimeline.to(this._icosphere.gltf.scene.scale, {
+            ...ICOSPHERE_SCALE
+         }, 'main');
+         */
+    },
+
+    _createTorusAnimations() {
+        this._hoverTimeline.to(this._torus.gltf.scene.scale, {
+            ...TORUS_HOVER_SCALE
+        }, 'main');
+
+        this._mainTimeline.to(this._torus.gltf.scene.rotation, {
+            ...TORUS_ROTATION
+        }, 'main');
+
+        this._mainTimeline.to(this._torus.gltf.scene.position, {
+            ...TORUS_POSITION
+        }, 'main');
+
+        /*
+        this._mainTimeline.to(this._torus.gltf.scene.scale, {
+            ...TORUS_SCALE
+        }, 'main');
+        */
+    },
+
+    _createArmatureAnimations() {
+        this._hoverTimeline.to(this._armature.gltf.scene.scale, {
+            ...ARMATURE_HOVER_SCALE
+        }, 'main');
+
+        this._mainTimeline.to(this._armature.gltf.scene.rotation, {
+            ...ARMATURE_ROTATION
+        }, 'main');
+
+        this._mainTimeline.to(this._armature.gltf.scene.position, {
+            ...ARMATURE_POSITION
+        }, 'main');
+
+        /*
+        this._mainTimeline.to(this._armature.gltf.scene.scale, {
+            ...ARMATURE_SCALE
+        }, 'main');
+        */
+    },
+
+    _createRendererAnimations() {
+        this._mainTimeline = gsap.timeline();
+        this._hoverTimeline = gsap.timeline();
+
+        this._mainTimeline.add('main');
+        this._hoverTimeline.add('main');
+
+        this._mainTimeline.pause();
+        this._hoverTimeline.pause();
+
+        this._createIcosphereAnimations();
+        this._createTorusAnimations();
+        this._createArmatureAnimations();
     },
 
     _createFadeAnimations() {
@@ -290,6 +320,7 @@ const home = {
     },
 
     _onRendererCreated() {
+        this._createRendererAnimations();
         this._scrollTile($('.tile.main'));
         $('.renderer').on('mousemove', event => this._onRendererMouseMove(event));
         $(window).on('scroll-next', () => this._scrollTile(this._nextTile()));

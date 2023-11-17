@@ -14,6 +14,7 @@ class model {
         this.gltf = gltf;
         this.uuid = this.gltf.scene.uuid;
         this.intersect = false;
+        this.drag = false;
     }
 
     getSize(camera) {
@@ -66,7 +67,9 @@ class scene {
 
         this.onResize();
         this.render();
-        this.element.on('mousemove', event => this._updatePointer(event.pageX, event.pageY));
+        this.element.on('mousemove', event => this._updatePointer(event.clientX, event.clientY));
+        this.element.on('mousedown', () => this._onMouseDown());
+        this.element.on('mouseup', () => this._onMouseUp());
 
     }
 
@@ -91,6 +94,18 @@ class scene {
     
         this.renderer.setSize(this.width, this.height);
     }
+
+    _onMouseDown() {
+        Object.values(this.models).forEach(instance => {
+            instance.drag = instance.intersect;
+        });
+    }
+
+    _onMouseUp() {
+        Object.values(this.models).forEach(instance => {
+            instance.drag = false;
+        });
+    }
     
     _updatePointer(x, y) {
         const win = $(window);
@@ -99,6 +114,8 @@ class scene {
         const pY = y - offset.top + win.scrollTop();
         const nX = (pX / this.width) * 2 - 1;
         const nY = -(pY / this.height) * 2 + 1;
+
+        console.log(nX, nY);
         this.pointer.set(nX, nY);
     }
 
