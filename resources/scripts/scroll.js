@@ -100,7 +100,7 @@ const scroll = {
 
             console.log("scroll y", touch.screenY, "delta y", deltaY);
             
-            this._onScroll(deltaY * 1.5);
+            this._onScroll(deltaY * 2);
         }
     },
 

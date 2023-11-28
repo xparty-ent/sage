@@ -34,7 +34,6 @@ class model {
             x: vector.x,
             y: vector.y
         };
-    
     }
 }
 
@@ -82,6 +81,23 @@ class scene {
         );
     }
 
+    get3DPointerPosition(x, y) {
+        var vec = new Vector3(); // create once and reuse
+        var pos = new Vector3(); // create once and reuse
+
+        vec.set(this.pointer.x, this.pointer.y, 0.5);
+
+        vec.unproject(this.camera);
+
+        vec.sub(this.camera.position).normalize();
+
+        var distance = -this.camera.position.z / vec.z;
+
+        pos.copy(this.camera.position).add(vec.multiplyScalar(distance));
+
+        return pos;
+    }
+
     onResize() {
         this.width = this.element.width();
         this.height = this.element.height();
@@ -115,7 +131,6 @@ class scene {
         const nX = (pX / this.width) * 2 - 1;
         const nY = -(pY / this.height) * 2 + 1;
 
-        console.log(nX, nY);
         this.pointer.set(nX, nY);
     }
 
