@@ -19,13 +19,14 @@
     "translate:mo": "wp i18n make-mo ./resources/lang ./resources/lang"
   },
   "devDependencies": {
-    "@roots/bud": "6.12.2",
-    "@roots/sage": "6.12.2"
+    "@roots/bud": "^6.6.6",
+    "@roots/sage": "^6.6.6"
   },
   "dependencies": {
     "axios": "^1.5.0",
     "caniuse-lite": "^1.0.30001561",
     "gsap": "^3.12.2",
+    "offscreen-canvas": "^0.1.1",
     "three": "^0.156.1"
   }
 }

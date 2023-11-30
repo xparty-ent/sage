@@ -20,6 +20,7 @@
     window.home.icosphere = '{{ $icosphere }}';
     window.home.torus = '{{ $torus }}';
     window.home.armature = '{{ $armature }}';
+    window.home.renderer = '{{ $renderer }}';
 }());
 </script>
 @endpush

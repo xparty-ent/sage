@@ -54,7 +54,8 @@ export default async (app) => {
       editor: ['@scripts/editor', '@styles/editor'],
       //animations: ['@scripts/animations', '@styles/animations'],
       critical: ['@styles/critical'],
-      home: ['@scripts/home', '@styles/home/home']
+      home: ['@scripts/home', '@styles/home/home'],
+      renderer: ['@scripts/renderer']
     })
     .assets(['images', 'models', 'fonts'])
     .provide({
@@ -90,8 +91,7 @@ export default async (app) => {
     () => app.warn([
       'resources/views', 
       'app'
-    ]),
-    () => app.set
+    ])
   );
 
 

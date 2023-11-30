@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import domReady from '@roots/sage/client/dom-ready';
 import scroll from '@scripts/scroll';
 import xp from '@scripts/xp';
+import createWorker from 'offscreen-canvas/create-worker';
 
 // 3d environment variables
 const CAMERA_POSITION = { x: 0, y: 0, z: 450, duration: 5, delay: 0, ease: 'back', repeat: 0 };
@@ -34,6 +35,8 @@ const home = {
     _renderer: null,
 
     _changingSlide: false,
+
+    _worker: null,
 
     _runHoverAnimation() {
     },
@@ -331,14 +334,28 @@ const home = {
         $(window).on('scroll-prev', () => this._scrollTile(this._prevTile()));
         $(window).on('scroll-value', (e, val) => this._scrollValue(val));
     },
+
+    _createWebWorker() {
+        const element = $('.renderer').first();
+
+        this._worker = createWorker(element, window.home.renderer, message => {
+            console.log(message);
+        });
+
+        this._worker.post({ message: 'start' });
+    },
     
     register() {
         scroll.register();
         xp.register();
         scroll.disable();
         this._createFadeAnimations();
+        this._createWebWorker();
+
+        /*
         this._createRenderer()
             .then(() => this._onRendererCreated());
+        */
     }
 };
 

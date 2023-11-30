@@ -25,7 +25,8 @@ class Home extends Composer
         return [
             'icosphere' => asset('/models/xp-icosphere.glb'),
             'torus' => asset('/models/xp-torus.glb'),
-            'armature' => asset('/models/xp-armature.glb')
+            'armature' => asset('/models/xp-armature.glb'),
+            'renderer' => asset('js/renderer.js')
         ];
     }
 }

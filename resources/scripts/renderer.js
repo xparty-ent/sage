@@ -1,13 +1,16 @@
+// import worker apis
+import insideWorker from 'offscreen-canvas/inside-worker';
 
 // import three classes
-import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
-import { Scene } from 'three/src/scenes/Scene.js';
-import { Vector3 } from 'three/src/math/Vector3.js';
-import { Vector2 } from 'three/src/math/Vector2.js';
-import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DirectionalLight } from 'three/src/lights/DirectionalLight.js';
-import { Raycaster } from 'three/src/core/Raycaster.js';
+import { 
+    PerspectiveCamera,
+    Scene,
+    Vector3,
+    Vector2,
+    WebGLRenderer,
+    DirectionalLight,
+    Raycaster
+} from 'three';
 
 class model {
     constructor(gltf) {
@@ -199,4 +202,9 @@ const renderer = {
     }
 };
 
-export default renderer;
+var _scene = null;
+const worker = insideWorker(message => {
+    if(message.data.canvas) {
+        _scene = new scene(message.data.canvas);
+    }
+});
