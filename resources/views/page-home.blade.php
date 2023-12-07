@@ -2,7 +2,11 @@
 
 @section('page-content')
 <div class="home-container">
-    <div class="renderer fade-in"></div>
+    <div class="renderer">
+        <div class="loader">
+            <div class="bar"></div>
+        </div>
+    </div>
     <div class="scroll"></div>
     <ul class="pagination">
         <li class="main active"></li>
@@ -17,10 +21,7 @@
 <script>
 (function() {
     window.home = window.home || {};
-    window.home.icosphere = '{{ $icosphere }}';
-    window.home.torus = '{{ $torus }}';
-    window.home.armature = '{{ $armature }}';
-    window.home.renderer = '{{ $renderer }}';
+    window.home.mainSequence = '{{ $mainSequence }}';
 }());
 </script>
 @endpush

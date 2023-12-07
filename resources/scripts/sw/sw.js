@@ -29,6 +29,11 @@ const CURRENT_CACHES = [
         name: `xp-styles-cache-v${CACHE_VERSION}`,
         contentTypeMatch: /\/css/i,
         urlMatch: /xp-theme\/public\/css\//i
+    },
+    {
+        name: `xp-images-cache-v${CACHE_VERSION}`,
+        contentTypeMatch: /image\//i,
+        urlMatch: /xp-theme\/public\/images\//i
     }
 ];
 

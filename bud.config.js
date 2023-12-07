@@ -54,8 +54,7 @@ export default async (app) => {
       editor: ['@scripts/editor', '@styles/editor'],
       //animations: ['@scripts/animations', '@styles/animations'],
       critical: ['@styles/critical'],
-      home: ['@scripts/home', '@styles/home/home'],
-      renderer: ['@scripts/renderer']
+      home: ['@scripts/home', '@styles/home/home']
     })
     .assets(['images', 'models', 'fonts'])
     .provide({
