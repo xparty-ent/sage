@@ -125,7 +125,7 @@ export default async (app) => {
         slug: 'comfortoaa',
         fontFace: [{
           fontFamily: "comfortoaa",
-          src: ["file:./public/fonts/comfortoaa.ttf"],
+          src: ["file://./public/fonts/comfortoaa.ttf"],
        }],
       },
       {
@@ -134,7 +134,7 @@ export default async (app) => {
         slug: 'sofiapro',
         fontFace: [{
           fontFamily: "sofiapro",
-          src: ["file:./public/fonts/sofiapro.otf"],
+          src: ["file://./public/fonts/sofiapro.otf"],
        }],
       },
       {
@@ -143,7 +143,7 @@ export default async (app) => {
         slug: 'tstar',
         fontFace: [{
           fontFamily: "tstar",
-          src: ["file:./public/fonts/tstar.otf"],
+          src: ["file://./public/fonts/tstar.otf"],
        }],
       },
       {
@@ -152,7 +152,7 @@ export default async (app) => {
         slug: 'ptmono',
         fontFace: [{
           fontFamily: "ptmono",
-          src: ["file:./public/fonts/ptmono.ttf"],
+          src: ["file://./public/fonts/ptmono.ttf"],
        }],
       }
     ])
