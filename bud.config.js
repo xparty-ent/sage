@@ -34,12 +34,6 @@ export default async (app) => {
      */
     () => app.splitChunks(),
 
-    /**
-     * Configure the runtime settings
-     * 
-     * @see {@link https://bud.js.org/learn/config/optimization}
-     */
-    () => app.runtime()
   );
   
   /**
