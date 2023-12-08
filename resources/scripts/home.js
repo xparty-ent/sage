@@ -32,6 +32,7 @@ const home = {
         this._sequenceRenderer.on('images-loaded', () => this._onSequenceImagesLoaded());
     },
 
+    
     _createMainTileTimeline() {
         const playhead = { frame: 0 };
         const loader = $('.loader');
