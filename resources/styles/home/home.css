@@ -2,7 +2,28 @@
     width: 100%;
     height: calc(100vh - var(--xp-header-height));
     position: fixed;
+    z-index: 1;
+    background-color: transparent;
     /*pointer-events: none;*/
+}
+
+.home-container .renderer .loader {
+    position: absolute;
+    width: 10vw;
+    height: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #212121;
+}
+
+.home-container .renderer .loader .bar {
+    position: relative;
+    top: 0px;
+    height: 10px;
+    width: 0%;
+    background: #bdbdbd;
+    /*transition: width 1s ease-in;*/
 }
 
 .home-container .renderer.faded {

@@ -90,8 +90,7 @@ export default async (app) => {
     () => app.warn([
       'resources/views', 
       'app'
-    ]),
-    () => app.set
+    ])
   );
 
 

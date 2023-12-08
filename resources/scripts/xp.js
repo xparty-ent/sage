@@ -1,11 +1,12 @@
 import api from '@scripts/xp/api';
-import renderer from '@scripts/xp/renderer';
 import serviceworker from '@scripts/xp/serviceworker';
+import sequencerenderer from './xp/sequencerenderer';
+
 
 const xp = {
     api,
-    renderer,
     serviceworker,
+    sequencerenderer,
 
     register() {
         serviceworker.register();
