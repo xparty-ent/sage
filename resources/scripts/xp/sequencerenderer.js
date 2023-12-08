@@ -1,21 +1,26 @@
 import axios from "axios";
+import EventEmitter from "events";
 
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 const defer = (callback) => setTimeout(callback, 0);
 
-class sequencerenderer {
-    constructor(container) {
+class sequencerenderer extends EventEmitter {
+    constructor(container, baseUrl) {
+        super();
         this.container = container;
+        this.baseUrl = baseUrl;
+
+        this.manifest = null;
+        this.images = null;
+        this.queue = null;
         
         this.canvas = $('<canvas/>');
         this.container.append(this.canvas);
 
         this.context = this.canvas.get(0).getContext("2d");
         this.currentIndex = -1;
-        this.currentManifest = null;
-        this.sequences = {};
-
         this._onCanvasResize();
+
         $(window).on('resize', () => this._onCanvasResize());
     }
 
@@ -24,76 +29,96 @@ class sequencerenderer {
         const h = this.container.height();
         this.canvas.attr('width', `${w}px`);
         this.canvas.attr('height', `${h}px`);
-        this.drawIndex(this.currentManifest, this.currentIndex);
+        this.emit('resize', { width: w, height: h });
 
         console.log(`[sequencerenderer] canvas resized - ${w}x${h}`);
     }
 
-    _getManifestUrl(baseUrl) {
-        return `${baseUrl}seq-manifest.json`;
+    _getManifestUrl() {
+        return `${this.baseUrl}seq-manifest.json`;
     }
 
-    _loadManifest(baseUrl) {
-        const manifestUrl = this._getManifestUrl(baseUrl);
+    _loadManifest() {
+        const manifestUrl = this._getManifestUrl();
         console.log(`[sequencerenderer] loading manifest from ${manifestUrl}...`);
-        return axios.get(this._getManifestUrl(baseUrl));
-    }
+        return new Promise((resolve, reject) => axios.get(manifestUrl).then(response => {
+            const manifest = response.data;
+            console.log(`[sequencerenderer] loaded manifest ${manifest.name}`);
+            console.log(`[sequencerenderer] frames: ${manifest.frames.count}`);
+            console.log(`[sequencerenderer] frames start offset: ${manifest.frames.start}`);
+            console.log(`[sequencerenderer] frames digits: ${manifest.frames.digits}`);
+            console.log(`[sequencerenderer] frames buffer: ${manifest.frames.buffer}`);
+            console.log(`[sequencerenderer] frames extension: ${manifest.frames.extension}`);
+            
+            this.images = new Array(manifest.frames.count);
+            this.queue = new Array(manifest.frames.count);
 
-    _onImageLoaded(manifest, index, image) {
-        console.log(`[sequencerenderer] loaded image ${index} for manifest ${manifest.name}`);
-        this.sequences[manifest.name].images[index] = image;
-
-        if(!this.currentIndex && !this.currentManifest) {
-            this.drawIndex(manifest.name, index);
-        }
-    }
-
-    _loadNextImage(baseUrl, manifest) {
-        if(!this.sequences[manifest.name].queue.length) {
-            console.log('[sequencerenderer] sequence loading complete');
-            return null;
-        }
-
-        const index = this.sequences[manifest.name].queue.shift();
-
-        const name = zeroPad(index, manifest.frames.digits);
-        const file = `${name}.${manifest.frames.extension}`;
-        const url = `${baseUrl}${file}`;
-        
-        console.log(`[sequencerenderer] loading frame ${index} as ${file}...`);
-
-        const image = new Image;
-        image.onload = () => this._onImageLoaded(manifest, index, image);
-        image.src = url;
-
-        return image;
-    }
-
-    _createPriorityQueue(manifest) {
-        let index = 0;
-        for(var x = 0; x < manifest.frames.buffer; x++) {
-            for(var i = 0; i < manifest.frames.count / manifest.frames.buffer; i++) {
-                const priority = manifest.frames.buffer * i + x;
-                if(priority >= manifest.frames.count) continue;
-
-                this.sequences[manifest.name].queue[index++] = priority;
+            for(var x = 0, index = 0; x < manifest.frames.buffer; x++) {
+                for(var i = 0; i < manifest.frames.count / manifest.frames.buffer; i++, index++) {
+                    const priority = manifest.frames.buffer * i + x;
+                    if(priority >= manifest.frames.count) continue;
+    
+                    this.queue[index] = priority;
+                }
             }
-        }
+
+            this.manifest = manifest;
+            this.emit('manifest-loaded', manifest);
+            resolve(manifest);
+        }));
     }
 
-    drawIndex(name, index) {
+    _loadImage(index) {
+        return new Promise((resolve, reject) => {
+            const name = zeroPad(index, this.manifest.frames.digits);
+            const file = `${name}.${this.manifest.frames.extension}`;
+            const url = `${this.baseUrl}${file}`;
+            
+            console.log(`[sequencerenderer] loading frame ${index} as ${file}...`);
+    
+            defer(() => {
+                const image = new Image;
+                image.onload = () => resolve({ index, image });
+                image.onerror = (e) => reject(e);
+                image.src = url;
+            });
+        });
+    }
+
+    _loadImages() {
+        let promises = [];
+
+        console.log(this.queue);
+
+        while(this.queue.length) {
+            const index = this.queue.shift();
+            const promise = this._loadImage(index)
+                .then(data => {
+                    this.images[data.index] = data.image;
+                    const loadedImages = this.images.filter(image => image).length;
+                    const imagesCount = this.images.length;
+                    this.emit('image-loaded', loadedImages, imagesCount);
+                });
+            promises.push(promise);
+        }
+
+        return Promise.all(promises).then(() => {
+            this.emit('images-loaded', this.images.length);
+        });
+    }
+
+    draw(index) {
         index = Math.floor(index);
 
-        if(!this.sequences.hasOwnProperty(name) || this.sequences[name].images === null || this.sequences[name].images[index] === null)
+        if(!this.images === null || this.images[index] === null)
             return;
 
-        if(this.currentManifest === name && this.currentIndex === index)
+        if(this.currentIndex === index)
             return;
 
-        this.currentManifest = name;
         this.currentIndex = index;
 
-        const image = this.sequences[name].images[index];
+        const image = this.images[index];
 
         const w = this.canvas.width();
         const h = this.canvas.height();
@@ -130,25 +155,15 @@ class sequencerenderer {
         
     }
 
-    load(baseUrl) {
-        if(!baseUrl.endsWith('/'))
-            baseUrl += '/';
+    load() {
+        this._loadManifest()
+            .then(() => this._loadImages());
 
+        /*
         defer(() => {
             this._loadManifest(baseUrl)
                 .then(response => {
                     const manifest = response.data;
-                    console.log(`[sequencerenderer] loaded manifest ${manifest.name}`);
-                    console.log(`[sequencerenderer] frames: ${manifest.frames.count}`);
-                    console.log(`[sequencerenderer] frames start offset: ${manifest.frames.start}`);
-                    console.log(`[sequencerenderer] frames digits: ${manifest.frames.digits}`);
-                    console.log(`[sequencerenderer] frames buffer: ${manifest.frames.buffer}`);
-                    console.log(`[sequencerenderer] frames extension: ${manifest.frames.extension}`);
-
-                    this.sequences[manifest.name] = {};
-                    this.sequences[manifest.name].manifest = manifest;
-                    this.sequences[manifest.name].images = new Array(manifest.frames.count);
-                    this.sequences[manifest.name].queue = new Array(manifest.frames.count);
 
                     this._createPriorityQueue(manifest);
 
@@ -157,6 +172,7 @@ class sequencerenderer {
                     console.log(`[sequencerenderer] queued frames load`);
                 });
         });
+        */
     }
 };
 

@@ -8,15 +8,45 @@ const home = {
 
     _timeline: null,
 
+    _onSequenceImageLoaded(loadedImages, imagesCount) {
+        const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
+        
+        const loader = $('.loader .bar');
+        gsap.to(loader, {
+            width: `${loadedPercentage}%`,
+            duration: 0.5
+        });
+    },
+
+    _onSequenceImagesLoaded() {
+        this._timeline.play();
+    },
+
     _createSequenceRenderer() {
         console.log(`[home] creating sequence renderer...`);
         const element = $('.renderer').first();
-        this._sequenceRenderer = new xp.sequencerenderer(element);
-        this._sequenceRenderer.load(window.home.mainSequence);
+        this._sequenceRenderer = new xp.sequencerenderer(element, window.home.mainSequence);
+        this._sequenceRenderer.load();
+
+        this._sequenceRenderer.on('image-loaded', (loadedImages, imagesCount) => this._onSequenceImageLoaded(loadedImages, imagesCount));
+        this._sequenceRenderer.on('images-loaded', () => this._onSequenceImagesLoaded());
     },
 
     _createMainTileTimeline() {
         const playhead = { frame: 0 };
+        const loader = $('.loader');
+        const tile = $('.tile.main');
+
+        this._timeline.to(loader, {
+            opacity: 0,
+            duration: 1
+        });
+
+        this._timeline.to(tile, {
+            backgroundColor: '#212121',
+            duration: 1
+        });
+        
         this._timeline.to(playhead, {
             frame: 64,
             ease: 'ease-in',
@@ -26,19 +56,21 @@ const home = {
                 pin: true,
                 end: "+=1500", // end after scrolling 500px beyond the start
                 scrub: 1.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-              },
+            },
             onUpdate: () => {
                 console.log("update", playhead.frame);
-                this._sequenceRenderer.drawIndex('airpods-pro', playhead.frame)
+                this._sequenceRenderer.draw(playhead.frame)
             }
         });
     },
 
     _createTimeline() {
         this._timeline = gsap.timeline();
+        this._timeline.pause();
 
         console.log('[home] creating main tile timeline...');
         this._createMainTileTimeline();
+
     },
     
     register() {
