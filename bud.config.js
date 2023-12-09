@@ -76,7 +76,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.setProxyUrl}
    * @see {@link https://bud.js.org/docs/bud.watch}
    */
-  app.when(app.isDevelopment, 
+  /*app.when(app.isDevelopment, 
     () => app.setUrl('http://localhost:3000'),
     () => app.setPublicUrl('http://localhost:3000'),
     () => app.setProxyUrl('http://localhost'),
@@ -85,7 +85,7 @@ export default async (app) => {
       'resources/views', 
       'app'
     ])
-  );
+  );*/
 
 
   /**
