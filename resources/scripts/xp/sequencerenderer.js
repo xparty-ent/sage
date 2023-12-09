@@ -1,10 +1,9 @@
 import axios from "axios";
-import EventEmitter from "events";
 
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 const defer = (callback) => setTimeout(callback, 0);
 
-class sequencerenderer extends EventEmitter {
+class sequencerenderer extends EventTarget  {
     constructor(container, baseUrl) {
         super();
         this.container = container;
@@ -24,12 +23,21 @@ class sequencerenderer extends EventEmitter {
         $(window).on('resize', () => this._onCanvasResize());
     }
 
+    _emit(name, obj) {
+        const event = new CustomEvent(name, obj)
+        this.dispatchEvent(event);
+    }
+
+    on(name, callback) {
+        this.addEventListener(name, callback);
+    }
+
     _onCanvasResize() {
         const w = this.container.width();
         const h = this.container.height();
         this.canvas.attr('width', `${w}px`);
         this.canvas.attr('height', `${h}px`);
-        this.emit('resize', { width: w, height: h });
+        this._emit('resize', { width: w, height: h });
 
         console.log(`[sequencerenderer] canvas resized - ${w}x${h}`);
     }
@@ -63,7 +71,7 @@ class sequencerenderer extends EventEmitter {
             }
 
             this.manifest = manifest;
-            this.emit('manifest-loaded', manifest);
+            this._emit('manifest-loaded', manifest);
             resolve(manifest);
         }));
     }
@@ -97,13 +105,13 @@ class sequencerenderer extends EventEmitter {
                     this.images[data.index] = data.image;
                     const loadedImages = this.images.filter(image => image).length;
                     const imagesCount = this.images.length;
-                    this.emit('image-loaded', loadedImages, imagesCount);
+                    this._emit('image-loaded', loadedImages, imagesCount);
                 });
             promises.push(promise);
         }
 
         return Promise.all(promises).then(() => {
-            this.emit('images-loaded', this.images.length);
+            this._emit('images-loaded', this.images.length);
         });
     }
 
