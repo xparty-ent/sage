@@ -42,7 +42,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.entry}
    * @see {@link https://bud.js.org/docs/bud.assets}
    */
-  app
+  /*app
     .entry({
       app: ['@scripts/app', '@styles/app'],
       editor: ['@scripts/editor', '@styles/editor'],
@@ -53,7 +53,7 @@ export default async (app) => {
     .assets(['images', 'models', 'fonts'])
     .provide({
       jquery: ["jQuery", "$"],
-    });
+    });*/
   
   /**
    * Enable bud sourcemaps
@@ -67,7 +67,7 @@ export default async (app) => {
    *
    * @see {@link https://bud.js.org/docs/bud.setPublicPath}
    */
-  app.setPublicPath('/app/themes/xp-theme/public/');
+  //app.setPublicPath('/app/themes/xp-theme/public/');
 
   /**
    * Development server settings
