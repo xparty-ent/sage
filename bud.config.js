@@ -12,29 +12,29 @@ export default async (app) => {
    * 
    * @see {@link https://bud.js.org/reference/bud.when}
    */
-  app.when(app.isProduction, 
+  //app.when(app.isProduction, 
     /**
      * Configure bud hash
      * 
      * @see {@link https://bud.js.org/reference/bud.hash}
      */
-    () => app.hash(false),
+  //  () => app.hash(false),
 
     /**
      * Configure bud minification
      * 
      * @see {@link https://bud.js.org/reference/bud.minimize}
      */
-    () => app.minimize(true),
+  //  () => app.minimize(true),
 
     /**
      * Configure chunks splitting
      * 
      * @see {@link https://bud.js.org/reference/bud.splitChunks}
      */
-    () => app.splitChunks(),
+  //  () => app.splitChunks(),
 
-  );
+  //);
   
   /**
    * Application assets & entrypoints
