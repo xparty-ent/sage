@@ -12,29 +12,29 @@ export default async (app) => {
    * 
    * @see {@link https://bud.js.org/reference/bud.when}
    */
-  //app.when(app.isProduction, 
+  app.when(app.isProduction, 
     /**
      * Configure bud hash
      * 
      * @see {@link https://bud.js.org/reference/bud.hash}
      */
-  //  () => app.hash(false),
+    () => app.hash(false),
 
     /**
      * Configure bud minification
      * 
      * @see {@link https://bud.js.org/reference/bud.minimize}
      */
-  //  () => app.minimize(true),
+    () => app.minimize(true),
 
     /**
      * Configure chunks splitting
      * 
      * @see {@link https://bud.js.org/reference/bud.splitChunks}
      */
-  //  () => app.splitChunks(),
+    () => app.splitChunks(),
 
-  //);
+  );
   
   /**
    * Application assets & entrypoints
@@ -42,7 +42,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.entry}
    * @see {@link https://bud.js.org/docs/bud.assets}
    */
-  /*app
+  app
     .entry({
       app: ['@scripts/app', '@styles/app'],
       editor: ['@scripts/editor', '@styles/editor'],
@@ -53,7 +53,7 @@ export default async (app) => {
     .assets(['images', 'models', 'fonts'])
     .provide({
       jquery: ["jQuery", "$"],
-    });*/
+    });
   
   /**
    * Enable bud sourcemaps
@@ -67,7 +67,7 @@ export default async (app) => {
    *
    * @see {@link https://bud.js.org/docs/bud.setPublicPath}
    */
-  //app.setPublicPath('/app/themes/xp-theme/public/');
+  app.setPublicPath('/app/themes/xp-theme/public/');
 
   /**
    * Development server settings
@@ -76,7 +76,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/docs/bud.setProxyUrl}
    * @see {@link https://bud.js.org/docs/bud.watch}
    */
-  /*app.when(app.isDevelopment, 
+  app.when(app.isDevelopment, 
     () => app.setUrl('http://localhost:3000'),
     () => app.setPublicUrl('http://localhost:3000'),
     () => app.setProxyUrl('http://localhost'),
@@ -85,7 +85,7 @@ export default async (app) => {
       'resources/views', 
       'app'
     ])
-  );*/
+  );
 
 
   /**
@@ -96,7 +96,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/extensions/sage/theme.json}
    * @see {@link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-json}
    */
-  /*app.wpjson
+  app.wpjson
     .set('settings.color.custom', true)
     .set('settings.color.customDuotone', true)
     .set('settings.color.customGradient', true)
@@ -165,5 +165,5 @@ export default async (app) => {
     .set('settings.spacing.padding', true)
     .set('settings.spacing.units', ['px', '%', 'em', 'rem', 'vw', 'vh'])
     .set('settings.typography.customFontSize', false)
-    .enable();*/
+    .enable();
 };
