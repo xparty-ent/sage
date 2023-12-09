@@ -96,7 +96,7 @@ export default async (app) => {
    * @see {@link https://bud.js.org/extensions/sage/theme.json}
    * @see {@link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-json}
    */
-  app.wpjson
+  /*app.wpjson
     .set('settings.color.custom', true)
     .set('settings.color.customDuotone', true)
     .set('settings.color.customGradient', true)
@@ -165,5 +165,5 @@ export default async (app) => {
     .set('settings.spacing.padding', true)
     .set('settings.spacing.units', ['px', '%', 'em', 'rem', 'vw', 'vh'])
     .set('settings.typography.customFontSize', false)
-    .enable();
+    .enable();*/
 };
