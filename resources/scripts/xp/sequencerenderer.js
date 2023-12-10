@@ -24,7 +24,7 @@ class sequencerenderer extends EventTarget  {
     }
 
     _emit(name, obj) {
-        const event = new CustomEvent(name, obj)
+        const event = new CustomEvent(name, { detail: obj });
         this.dispatchEvent(event);
     }
 
@@ -105,7 +105,7 @@ class sequencerenderer extends EventTarget  {
                     this.images[data.index] = data.image;
                     const loadedImages = this.images.filter(image => image).length;
                     const imagesCount = this.images.length;
-                    this._emit('image-loaded', loadedImages, imagesCount);
+                    this._emit('image-loaded', { loadedImages, imagesCount });
                 });
             promises.push(promise);
         }
@@ -166,21 +166,6 @@ class sequencerenderer extends EventTarget  {
     load() {
         this._loadManifest()
             .then(() => this._loadImages());
-
-        /*
-        defer(() => {
-            this._loadManifest(baseUrl)
-                .then(response => {
-                    const manifest = response.data;
-
-                    this._createPriorityQueue(manifest);
-
-                    while(this._loadNextImage(baseUrl, manifest)) {}
-
-                    console.log(`[sequencerenderer] queued frames load`);
-                });
-        });
-        */
     }
 };
 

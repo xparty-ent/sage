@@ -3,8 +3,11 @@
     height: calc(100vh - var(--xp-header-height));
     position: fixed;
     z-index: 1;
-    background-color: transparent;
     /*pointer-events: none;*/
+}
+
+.home-container .renderer canvas {
+    background-color: transparent;
 }
 
 .home-container .renderer .loader {
@@ -43,7 +46,7 @@
 }
 
 .home-container .tile.middle {
-    margin-top: var(--xp-header-height);
+    /*margin-top: var(--xp-header-height);*/
 }
 
 .home-container .tile.last {
