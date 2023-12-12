@@ -2,7 +2,7 @@
     width: 100%;
     height: calc(100vh - var(--xp-header-height));
     position: fixed;
-    z-index: 1;
+    /*z-index: 1;*/
     /*pointer-events: none;*/
 }
 
@@ -143,15 +143,22 @@
     opacity: 1;
 }
 
-.home-container .tile.active .fade-in {
-    transform: translateY(0);
-    opacity: 1;
+.home-container .scroll {
+    position: fixed;
+    z-index: 1;
 }
 
-.home-container .scroll {
-    width: 0vw;
-    height: 2px;
-    position: fixed;
-    background: #212121;
-    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+.home-container .scroll::before,
+.home-container .scroll::after {
+    content: "";
+    border-width: 0 2px 2px 0 !important;
+    border: solid #212121;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+    transform: translate(-50%, -50%) rotate(45deg);
 }

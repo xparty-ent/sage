@@ -1,0 +1,10 @@
+{
+    "name": "ledwalls",
+    "frames": {
+        "start": 1,
+        "count": 60,
+        "digits": 4,
+        "buffer": 6,
+        "extension": "png"
+    }
+}

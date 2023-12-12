@@ -115,6 +115,11 @@ export default async (app) => {
         color: '#212121',
         name: 'Accent',
         slug: 'accent'
+      },
+      {
+        color: "#bdbdbd",
+        name: "Contrast",
+        slug: "contrast"
       }
     ])
 

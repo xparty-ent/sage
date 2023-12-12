@@ -63,13 +63,15 @@ class sequencerenderer extends EventTarget  {
 
             for(var x = 0, index = 0; x < manifest.frames.buffer; x++) {
                 for(var i = 0; i < manifest.frames.count / manifest.frames.buffer; i++, index++) {
-                    const priority = manifest.frames.buffer * i + x;
+                    const priority = (manifest.frames.buffer * i + x);
                     if(priority >= manifest.frames.count) continue;
     
-                    this.queue[index] = priority;
+                    this.queue[index] = priority + manifest.frames.start;
+
+                    console.log(index, this.queue[index]);
                 }
             }
-
+            
             this.manifest = manifest;
             this._emit('manifest-loaded', manifest);
             resolve(manifest);
@@ -95,14 +97,13 @@ class sequencerenderer extends EventTarget  {
 
     _loadImages() {
         let promises = [];
-
-        console.log(this.queue);
-
-        while(this.queue.length) {
-            const index = this.queue.shift();
+        
+        let index = null;
+        while(index = this.queue.shift()) {
             const promise = this._loadImage(index)
                 .then(data => {
-                    this.images[data.index] = data.image;
+                    
+                    this.images[data.index - this.manifest.frames.start] = data.image;
                     const loadedImages = this.images.filter(image => image).length;
                     const imagesCount = this.images.length;
                     this._emit('image-loaded', { loadedImages, imagesCount });

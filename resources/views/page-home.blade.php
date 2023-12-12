@@ -13,6 +13,7 @@
         <li class="middle"></li>
         <li class="last"></li>
     </ul>
+    <div class="scroll"></div>
     @php(the_content())
 </div>
 @endsection

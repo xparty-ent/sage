@@ -10,8 +10,8 @@ const home = {
 
     _onSequenceImageLoaded(e) {
         const { loadedImages, imagesCount } = e.detail; 
-        console.log(e, loadedImages, imagesCount);
         const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
+        console.log(`[home] loaded frame ${loadedImages}/${imagesCount}, progress: ${loadedPercentage}%`);
         
         const loader = $('.loader .bar');
         gsap.to(loader, {
@@ -40,49 +40,82 @@ const home = {
 
     
     _createMainTileTimeline() {
-        const playhead = { frame: 0 };
         const tile = $('.tile.main');
+        const canvas = $('.renderer canvas');
+        canvas.css('opacity', 0);
 
+        const playhead = { 
+            frame: 0 
+        };
+
+        
         if(tile.hasClass('has-base-background-color')) {
             tile.css('background-color', '#e0e0e0');
             tile.removeClass('has-base-background-color');
         }
-        
-        this._sequenceRenderer.draw(0);
 
-        this._timeline.to(tile, {
-            backgroundColor: '#212121',
-            duration: 1
+        $('.tile.main .fade-in').each((index, element) => {
+            if($(element).hasClass('has-accent-color')) {
+                $(element).css('color', '#212121');
+                $(element).removeClass('has-accent-color');
+            }
         });
         
-        this._timeline.to(playhead, {
-            frame: 15,
-            ease: 'ease-in',
+        // draw the first frame
+        this._sequenceRenderer.draw(0);
+
+        gsap.to(canvas, {
+           opacity: 1,
+           duration: 1 
+        });
+
+        let mainTimeline = gsap.timeline();
+
+
+        mainTimeline.to(playhead, {
+            frame: 39,
+            ease: 'none',
             scrollTrigger: {
-                start: 0,
+                start: "top top",
                 trigger: '.tile.main',
                 pin: true,
-                end: "+=1500", // end after scrolling 500px beyond the start
-                scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                end: "+=2000", // end after scrolling 500px beyond the start
+                scrub: 2.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
             },
+            onUpdate: () => {
+                console.log(`[home] drawing frame ${playhead.frame}`);
+                this._sequenceRenderer.draw(playhead.frame);
+            }
+        });
+
+        
+        $('.tile.main .fade-in').each((index, element) => {
+            mainTimeline.to(element, {
+                opacity: 1, 
+                yPercent: 5,
+                color: '#e0e0e0',
+                scrollTrigger: {
+                    start: `top top+=${5000 * (index ++ )}`,
+                    trigger: '.tile.main',
+                    pin: true,
+                    end: "+=2000", // end after scrolling 500px beyond the start
+                    scrub: 2.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                },
+            });
+        });
+        
+
+        /*
+        mainTimeline.to(playhead, {
+            frame: 60,
+            ease: 'ease-in',
             onUpdate: () => {
                 console.log("update", playhead.frame);
                 this._sequenceRenderer.draw(playhead.frame);
             }
         });
+        */
 
-        $('.tile.main .fade-in').each((index, element) => {
-            this._timeline.to(element, {
-                opacity: 1, 
-                scrollTrigger: {
-                    start: 1500 * (index + 1),
-                    trigger: '.tile.main',
-                    pin: true,
-                    end: `+=${1500 * (index + 2)}`, // end after scrolling 500px beyond the start
-                    scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-                },
-            })
-        });
     },
 
     _createTimeline() {

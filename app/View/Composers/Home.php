@@ -23,7 +23,7 @@ class Home extends Composer
     public function with()
     {
         return [
-            'mainSequence' => asset('/images/sequences/airpods-pro/'),
+            'mainSequence' => asset('/images/sequences/ledwalls/'),
         ];
     }
 }
