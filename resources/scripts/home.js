@@ -73,7 +73,7 @@ const home = {
 
 
         mainTimeline.to(playhead, {
-            frame: 39,
+            frame: 60,
             ease: 'none',
             scrollTrigger: {
                 start: "top top",
@@ -89,6 +89,7 @@ const home = {
         });
 
         
+        /*
         $('.tile.main .fade-in').each((index, element) => {
             mainTimeline.to(element, {
                 opacity: 1, 
@@ -103,6 +104,7 @@ const home = {
                 },
             });
         });
+        */
         
 
         /*
