@@ -23,6 +23,16 @@ class sequencerenderer extends EventTarget  {
         $(window).on('resize', () => this._onCanvasResize());
     }
 
+    static create(container, baseUrl) {
+        return new sequencerenderer(container, baseUrl);
+    }
+
+    static create(container, baseUrl, manifest) {
+        const renderer = new sequencerenderer(container, baseUrl);
+        renderer.manifest = manifest;
+        return renderer;
+    }
+
     _emit(name, obj) {
         const event = new CustomEvent(name, { detail: obj });
         this.dispatchEvent(event);
@@ -46,12 +56,23 @@ class sequencerenderer extends EventTarget  {
         return `${this.baseUrl}seq-manifest.json`;
     }
 
-    _loadManifest() {
+    _fetchManifest() {
         const manifestUrl = this._getManifestUrl();
         console.log(`[sequencerenderer] loading manifest from ${manifestUrl}...`);
-        return new Promise((resolve, reject) => axios.get(manifestUrl).then(response => {
-            const manifest = response.data;
-            console.log(`[sequencerenderer] loaded manifest ${manifest.name}`);
+
+        return axios.get(manifestUrl);
+    }
+
+    _loadManifest() {
+        return new Promise((resolve, reject) => {
+            
+            if(!this.manifest) {
+                return this._fetchManifest().then(response => response.data);
+            } else {
+                console.log('[sequencerenderer] manifest already loaded');
+                resolve(this.manifest);
+            }
+        }).then(manifest => {
             console.log(`[sequencerenderer] frames: ${manifest.frames.count}`);
             console.log(`[sequencerenderer] frames start offset: ${manifest.frames.start}`);
             console.log(`[sequencerenderer] frames digits: ${manifest.frames.digits}`);
@@ -74,8 +95,7 @@ class sequencerenderer extends EventTarget  {
             
             this.manifest = manifest;
             this._emit('manifest-loaded', manifest);
-            resolve(manifest);
-        }));
+        });
     }
 
     _loadImage(index) {

@@ -8,7 +8,7 @@ header.banner {
     justify-content: center;
     align-items: center;
     height: var(--xp-header-height);
-    z-index: 1;
+    z-index: 2;
 }
 
 header.banner a {

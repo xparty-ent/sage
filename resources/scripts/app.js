@@ -1,6 +1,8 @@
 import xp from '@scripts/xp';
 import mouse from '@scripts/mouse';
+import animations from '@scripts/animations';
 import '@scripts/header';
+import domReady from '@roots/sage/client/dom-ready';
 
 /**
  * @see {@link https://webpack.js.org/api/hot-module-replacement/}
@@ -16,5 +18,8 @@ window.xp = xp;
 /**
  * custom libraries
  */
-xp.register();
-mouse.register();
+domReady(() => {
+    xp.register();
+    mouse.register();
+    animations.register();
+});

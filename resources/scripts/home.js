@@ -31,7 +31,16 @@ const home = {
     _createSequenceRenderer() {
         console.log(`[home] creating sequence renderer...`);
         const element = $('.renderer').first();
-        this._sequenceRenderer = new xp.sequencerenderer(element, window.home.mainSequence);
+        this._sequenceRenderer = xp.sequencerenderer.create(element, window.home.mainSequence, {
+            "frames": {
+                "start": 1,
+                "count": 70,
+                "digits": 4,
+                "buffer": 6,
+                "extension": "png"
+            }
+        });
+
         this._sequenceRenderer.load();
 
         this._sequenceRenderer.on('image-loaded', e => this._onSequenceImageLoaded(e));
@@ -80,7 +89,7 @@ const home = {
                 trigger: '.tile.main',
                 pin: true,
                 end: "+=2000", // end after scrolling 500px beyond the start
-                scrub: 2.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
             },
             onUpdate: () => {
                 console.log(`[home] drawing frame ${playhead.frame}`);
