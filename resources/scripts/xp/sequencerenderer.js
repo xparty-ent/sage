@@ -108,7 +108,10 @@ class sequencerenderer extends EventTarget  {
     
             defer(() => {
                 const image = new Image;
-                image.onload = () => resolve({ index, image });
+                image.onload = () => {
+                    console.log(image.complete);
+                    resolve({ index, image });
+                };
                 image.onerror = (e) => reject(e);
                 image.src = url;
             });
@@ -116,33 +119,46 @@ class sequencerenderer extends EventTarget  {
     }
 
     _loadImages() {
-        let promises = [];
-        
-        let index = null;
-        while(index = this.queue.shift()) {
-            const promise = this._loadImage(index)
+        let loadImage = () => new Promise((resolve, reject) => {
+            let index = this.queue.shift();
+            if(index == null) {
+                this._emit('images-loaded', this.images.length);
+                resolve(null);
+                return;
+            }
+
+            return this._loadImage(index)
                 .then(data => {
-                    
                     this.images[data.index - this.manifest.frames.start] = data.image;
                     const loadedImages = this.images.filter(image => image).length;
                     const imagesCount = this.images.length;
                     this._emit('image-loaded', { loadedImages, imagesCount });
+                    resolve(data.image);
                 });
-            promises.push(promise);
-        }
-
-        return Promise.all(promises).then(() => {
-            this._emit('images-loaded', this.images.length);
         });
+
+        return loadImage()
+            .then(image => {
+                if(image)
+                    return this._loadImages();
+            });
+    }
+
+    _findNearestLoadedIndex(index) {
+        let nearest = Math.floor(index);
+        if(!this.images || !this.images.length) return null;
+
+        for(let i = 0; i < this.images.length; i++) {
+            if(!this.images[i]) continue;
+            if(Math.abs(Math.abs(i) - Math.abs(index)) < nearest) nearest = i;
+        }
+        return nearest;
     }
 
     draw(index) {
-        index = Math.floor(index);
+        index = this._findNearestLoadedIndex(index);
 
-        if(!this.images === null || this.images[index] === null)
-            return;
-
-        if(this.currentIndex === index)
+        if(!index || this.currentIndex === index)
             return;
 
         this.currentIndex = index;
