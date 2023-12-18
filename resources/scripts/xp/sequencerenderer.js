@@ -94,19 +94,6 @@ class sequencerenderer extends EventTarget  {
                 }
             }
 
-            /*
-            for(var x = 0, index = 0; x < manifest.frames.buffer; x++) {
-                for(var i = 0; i < manifest.frames.count / manifest.frames.buffer; i++, index++) {
-                    const priority = (manifest.frames.buffer * i + x);
-                    if(priority >= manifest.frames.count) continue;
-    
-                    this.queue[index] = priority + manifest.frames.start;
-                }
-            }
-            */
-
-            console.log(this.queue);
-            
             this.manifest = manifest;
             this._emit('manifest-loaded', manifest);
         });
