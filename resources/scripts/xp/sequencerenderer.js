@@ -73,48 +73,74 @@ class sequencerenderer extends EventTarget  {
                 resolve(this.manifest);
             }
         }).then(manifest => {
+            const buffersCount = Math.floor(manifest.frames.count / manifest.frames.buffer + !!(manifest.frames.count % manifest.frames.buffer));
+
             console.log(`[sequencerenderer] frames: ${manifest.frames.count}`);
             console.log(`[sequencerenderer] frames start offset: ${manifest.frames.start}`);
             console.log(`[sequencerenderer] frames digits: ${manifest.frames.digits}`);
             console.log(`[sequencerenderer] frames buffer: ${manifest.frames.buffer}`);
+            console.log(`[sequencerenderer] frames buffers count: ${buffersCount}`);
             console.log(`[sequencerenderer] frames extension: ${manifest.frames.extension}`);
             
             this.images = new Array(manifest.frames.count);
             this.queue = new Array(manifest.frames.count);
 
+            for(var buffer = 0, index = 0; buffer < buffersCount; buffer++) {
+                for(var position = 0; position < manifest.frames.buffer; position++) {
+                    const priority = (buffersCount * position + buffer);
+                    if(priority >= manifest.frames.count) continue;
+
+                    this.queue[index++] = priority + manifest.frames.start;
+                }
+            }
+
+            /*
             for(var x = 0, index = 0; x < manifest.frames.buffer; x++) {
                 for(var i = 0; i < manifest.frames.count / manifest.frames.buffer; i++, index++) {
                     const priority = (manifest.frames.buffer * i + x);
                     if(priority >= manifest.frames.count) continue;
     
                     this.queue[index] = priority + manifest.frames.start;
-
-                    console.log(index, this.queue[index]);
                 }
             }
+            */
+
+            console.log(this.queue);
             
             this.manifest = manifest;
             this._emit('manifest-loaded', manifest);
         });
     }
 
+    _imageAjax
+
     _loadImage(index) {
         return new Promise((resolve, reject) => {
             const name = zeroPad(index, this.manifest.frames.digits);
             const file = `${name}.${this.manifest.frames.extension}`;
             const url = `${this.baseUrl}${file}`;
+            const imageIndex = index - this.manifest.frames.start;
             
             console.log(`[sequencerenderer] loading frame ${index} as ${file}...`);
-    
-            defer(() => {
+
+            let http = new XMLHttpRequest();
+            http.open('GET', url, true);
+            http.responseType = 'arraybuffer';
+            http.onerror = (e) => reject(e);
+            http.onloadstart = () => this._emit('image-loading', { imageIndex, loadProgress: 0 });
+            http.onprogress = (e) => this._emit('image-loading', { imageIndex, loadProgress: parseInt((e.loaded / e.total) * 100) });
+            http.onload = () => {
+                let blob = new Blob([http.response]);
                 const image = new Image;
+                image.onerror = (e) => reject(e);
                 image.onload = () => {
-                    console.log(image.complete);
+                    if(!image.complete) return;
                     resolve({ index, image });
                 };
-                image.onerror = (e) => reject(e);
-                image.src = url;
-            });
+                image.src = window.URL.createObjectURL(blob);
+            };
+
+            http.send();
         });
     }
 
@@ -122,6 +148,7 @@ class sequencerenderer extends EventTarget  {
         let loadImage = () => new Promise((resolve, reject) => {
             let index = this.queue.shift();
             if(index == null) {
+                console.log(this.images);
                 this._emit('images-loaded', this.images.length);
                 resolve(null);
                 return;
@@ -129,10 +156,11 @@ class sequencerenderer extends EventTarget  {
 
             return this._loadImage(index)
                 .then(data => {
-                    this.images[data.index - this.manifest.frames.start] = data.image;
+                    const imageIndex = data.index - this.manifest.frames.start;
+                    this.images[imageIndex] = data.image;
                     const loadedImages = this.images.filter(image => image).length;
                     const imagesCount = this.images.length;
-                    this._emit('image-loaded', { loadedImages, imagesCount });
+                    this._emit('image-loaded', { loadedImages, imagesCount, imageIndex });
                     resolve(data.image);
                 });
         });
@@ -145,20 +173,26 @@ class sequencerenderer extends EventTarget  {
     }
 
     _findNearestLoadedIndex(index) {
-        let nearest = Math.floor(index);
         if(!this.images || !this.images.length) return null;
+
+        let nearest = Math.floor(index);
+        let distance = this.images.length + 1;
 
         for(let i = 0; i < this.images.length; i++) {
             if(!this.images[i]) continue;
-            if(Math.abs(Math.abs(i) - Math.abs(index)) < nearest) nearest = i;
+            if(Math.abs(i - index) >= distance) continue;
+            
+            distance = Math.abs(i - index);
+            nearest = i;
         }
+        
         return nearest;
     }
 
     draw(index) {
         index = this._findNearestLoadedIndex(index);
 
-        if(!index || this.currentIndex === index)
+        if(index === null || this.currentIndex === index)
             return;
 
         this.currentIndex = index;

@@ -8,24 +8,43 @@ const home = {
 
     _timeline: null,
 
-    _onSequenceImageLoaded(e) {
-        const { loadedImages, imagesCount } = e.detail; 
-        const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
-        console.log(`[home] loaded frame ${loadedImages}/${imagesCount}, progress: ${loadedPercentage}%`);
+    _onImageLoading(e) {
+        const { imageIndex, loadProgress } = e.detail;
+
+        if(imageIndex) return;
+        const bar = $('.loader .bar');
         
-        const loader = $('.loader .bar');
-        gsap.to(loader, {
-            width: `${loadedPercentage}%`,
+        gsap.to(bar, {        
+            width: `${loadProgress}%`,
             duration: 0.5
-        });
+        })
+
+    },
+
+    _onSequenceImageLoaded(e) {
+        const bar = $('.loader .bar');
+        const loader = $('.loader');
+        const { loadedImages, imagesCount, imageIndex } = e.detail; 
+        const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
+        console.log(`[home] loaded frame ${imageIndex}, loaded ${loadedImages}/${imagesCount} images, progress: ${loadedPercentage}%`);
+        
+        if(!imageIndex) {    
+            gsap.timeline({
+                onComplete: () => this._createMainTileTimeline()
+            })
+                .to(bar, {        
+                    width: '100%',
+                    duration: 0.5
+                })
+                .to(loader, {
+                    opacity: 0,
+                    duration: 1,
+            });
+        }
     },
 
     _onSequenceImagesLoaded() {
-        gsap.to($('.loader'), {
-            opacity: 0,
-            duration: 1,
-            onComplete: () => this._createMainTileTimeline()
-        });
+        console.log('[home] sequence images loaded');
     },
 
     _createSequenceRenderer() {
@@ -43,6 +62,7 @@ const home = {
 
         this._sequenceRenderer.load();
 
+        this._sequenceRenderer.on('image-loading', e => this._onImageLoading(e));
         this._sequenceRenderer.on('image-loaded', e => this._onSequenceImageLoaded(e));
         this._sequenceRenderer.on('images-loaded', () => this._onSequenceImagesLoaded());
     },
@@ -82,7 +102,7 @@ const home = {
 
 
         mainTimeline.to(playhead, {
-            frame: 60,
+            frame: 69,
             ease: 'none',
             scrollTrigger: {
                 start: "top top",
