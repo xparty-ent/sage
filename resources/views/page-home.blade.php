@@ -7,13 +7,19 @@
             <div class="bar"></div>
         </div>
     </div>
-    <div class="scroll"></div>
     <ul class="pagination">
         <li class="main active"></li>
         <li class="middle"></li>
         <li class="last"></li>
     </ul>
-    <div class="scroll"></div>
+    <div class="scroll">
+        <div class="container">
+            <p>Scrolla per iniziare</p>
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+        </div>
+    </div>
     @php(the_content())
 </div>
 @endsection

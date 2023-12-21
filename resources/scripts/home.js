@@ -24,6 +24,7 @@ const home = {
     _onSequenceImageLoaded(e) {
         const bar = $('.loader .bar');
         const loader = $('.loader');
+        const scroll = $('.scroll');
         const { loadedImages, imagesCount, imageIndex } = e.detail; 
         const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
         console.log(`[home] loaded frame ${imageIndex}, loaded ${loadedImages}/${imagesCount} images, progress: ${loadedPercentage}%`);
@@ -32,13 +33,17 @@ const home = {
             gsap.timeline({
                 onComplete: () => this._createMainTileTimeline()
             })
-                .to(bar, {        
-                    width: '100%',
-                    duration: 0.5
-                })
-                .to(loader, {
-                    opacity: 0,
-                    duration: 1,
+            .to(bar, {        
+                width: '100%',
+                duration: 0.5
+            })
+            .to(loader, {
+                opacity: 0,
+                duration: 1,
+            })
+            .to(scroll, {
+                opacity: 1,
+                duration: 0.5,
             });
         }
     },
@@ -71,6 +76,7 @@ const home = {
     _createMainTileTimeline() {
         const tile = $('.tile.main');
         const canvas = $('.renderer canvas');
+        const scroll = $('.scroll');
         canvas.css('opacity', 0);
 
         const playhead = { 
@@ -99,13 +105,26 @@ const home = {
         });
 
         let mainTimeline = gsap.timeline();
+        let scrollTimeline = gsap.timeline();
+        let mainTileTimeline = gsap.timeline();
 
-
-        mainTimeline.to(playhead, {
-            frame: 69,
-            ease: 'none',
+        scrollTimeline.to(scroll, {
+            opacity: 0,
             scrollTrigger: {
                 start: "top top",
+                trigger: '.scroll',
+                pin: true,
+                end: "+=500",
+                scrub: 0,
+            },
+        });
+
+
+        mainTileTimeline.to(playhead, {
+            frame: 30,
+            ease: 'none',
+            scrollTrigger: {
+                start: "bottom top",
                 trigger: '.tile.main',
                 pin: true,
                 end: "+=2000", // end after scrolling 500px beyond the start
@@ -116,6 +135,10 @@ const home = {
                 this._sequenceRenderer.draw(playhead.frame);
             }
         });
+
+
+        mainTimeline.add(scrollTimeline, '>');
+        mainTimeline.add(mainTileTimeline, '>');
 
         
         /*

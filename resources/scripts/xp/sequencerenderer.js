@@ -135,7 +135,6 @@ class sequencerenderer extends EventTarget  {
         let loadImage = () => new Promise((resolve, reject) => {
             let index = this.queue.shift();
             if(index == null) {
-                console.log(this.images);
                 this._emit('images-loaded', this.images.length);
                 resolve(null);
                 return;
