@@ -2,12 +2,12 @@ const CACHE_VERSION = 8;
 const CURRENT_CACHES = [
     {
         name: `3d-models-cache-v${CACHE_VERSION}`,
-        contentTypeMatch: null, ///^model\//i,
+        contentTypeMatch: null,
         urlMatch: /\.glb/
     },
     {
         name: `fonts-cache-v${CACHE_VERSION}`,
-        contentTypeMatch: null, ///^font\//i,
+        contentTypeMatch: null, 
         urlMatch: /\.ttf|\.otf/i,
     },
     {
@@ -37,6 +37,14 @@ const CURRENT_CACHES = [
     }
 ];
 
+const getCacheName = (name) => {
+    const url = new URL(location);
+    const searchParams = url.searchParams;
+    const ver = searchParams.get('ver');
+    
+    return `${name}-${ver}`;
+};
+
 const getSupportedCaches = () => new Set(CURRENT_CACHES.map(cache => cache.name));
 
 const clearCaches = async () => {
@@ -45,7 +53,7 @@ const clearCaches = async () => {
 
 
     for(const index in cacheNames) {
-        const cacheName = cacheNames[index];
+        const cacheName = getCacheName(cacheNames[index]);
         if(supportedCaches.has(cacheName)) continue;
 
         console.log(`sw - purging cache`, cacheName);
@@ -54,10 +62,11 @@ const clearCaches = async () => {
 };
 
 const openCache = async (name) => {
+    const cacheName = getCacheName(name);
     try {
-        return await caches.open(name);
+        return await caches.open(cacheName);
     } catch(e) {
-        console.log(`sw - failed to open cache ${name}, `, e);
+        console.log(`sw - failed to open cache ${cacheName}, `, e);
         return false;
     }
 }
