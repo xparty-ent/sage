@@ -1,37 +1,36 @@
-const CACHE_VERSION = 8;
 const CURRENT_CACHES = [
     {
-        name: `3d-models-cache-v${CACHE_VERSION}`,
+        name: `3d-models-cache`,
         contentTypeMatch: null,
         urlMatch: /\.glb/
     },
     {
-        name: `fonts-cache-v${CACHE_VERSION}`,
+        name: `fonts-cache`,
         contentTypeMatch: null, 
         urlMatch: /\.ttf|\.otf/i,
     },
     {
-        name: `wp-includes-scripts-cache-v${CACHE_VERSION}`,
+        name: `wp-includes-scripts-cache`,
         contentTypeMatch: /\/javascript/i,
         urlMatch: /wp\/wp-includes/i
     },
     {
-        name: `wp-includes-css-cache-v${CACHE_VERSION}`,
+        name: `wp-includes-css-cache`,
         contentTypeMatch: /\/css/i,
         urlMatch: /wp\/wp-includes/i
     },
     {
-        name: `xp-scripts-cache-v${CACHE_VERSION}`,
+        name: `xp-scripts-cache`,
         contentTypeMatch: /\/javascript/i,
         urlMatch: /xp-theme\/public\/js\//i
     },
     {
-        name: `xp-styles-cache-v${CACHE_VERSION}`,
+        name: `xp-styles-cache`,
         contentTypeMatch: /\/css/i,
         urlMatch: /xp-theme\/public\/css\//i
     },
     {
-        name: `xp-images-cache-v${CACHE_VERSION}`,
+        name: `xp-images-cache`,
         contentTypeMatch: /image\//i,
         urlMatch: /xp-theme\/public\/images\//i
     }
