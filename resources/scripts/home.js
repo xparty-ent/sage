@@ -105,29 +105,32 @@ const home = {
         });
 
         let mainTimeline = gsap.timeline();
-        let scrollTimeline = gsap.timeline();
         let mainTileTimeline = gsap.timeline();
 
-        scrollTimeline.to(scroll, {
+        let timeline = gsap.timeline().to(scroll, {
             opacity: 0,
             scrollTrigger: {
                 start: "top top",
                 trigger: '.scroll',
-                pin: true,
-                end: "+=500",
+                markers: true,
+                pin: false,
+                end: "bottom center",
                 scrub: 0,
             },
         });
+        
+        mainTimeline.add(timeline, '>');
 
 
-        mainTileTimeline.to(playhead, {
+        timeline = gsap.timeline().to(playhead, {
             frame: 30,
             ease: 'none',
             scrollTrigger: {
-                start: "bottom top",
-                trigger: '.tile.main',
-                pin: true,
-                end: "+=2000", // end after scrolling 500px beyond the start
+                start: "bottom center",
+                trigger: '.scroll',
+                markers: true,
+                pin: false,
+                end: "bottom top", // end after scrolling 500px beyond the start
                 scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
             },
             onUpdate: () => {
@@ -136,11 +139,29 @@ const home = {
             }
         });
 
+        mainTimeline.add(timeline, '>');
 
-        mainTimeline.add(scrollTimeline, '>');
-        mainTimeline.add(mainTileTimeline, '>');
+        timeline = gsap.timeline({
+            scrollTrigger: {
+                start: `top top`,
+                trigger: '.tile.main',
+                markers: true,
+                pin: true,
+                end: "+=5000", // end after scrolling 500px beyond the start
+                scrub: 2.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+            }
+        });
 
+        $('.tile.main .fade-in').each((index, element) => {
+            timeline.to(element, {
+                opacity: 1, 
+                //yPercent: 5,
+                color: '#e0e0e0',
+            });
+            
+        });
         
+        mainTimeline.add(timeline, '>');
         /*
         $('.tile.main .fade-in').each((index, element) => {
             mainTimeline.to(element, {
