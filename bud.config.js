@@ -7,6 +7,28 @@
  * @param {import('@roots/bud').Bud} app
  */
 export default async (app) => {
+  
+  /**
+   * Application assets & entrypoints
+   *
+   * @see {@link https://bud.js.org/reference/bud.entry}
+   * @see {@link https://bud.js.org/reference/bud.assets}
+   */
+  app
+    .entry({
+      app: ['@scripts/app', '@styles/app'],
+      editor: ['@scripts/editor', '@styles/editor'],
+      animations: ['@scripts/animations', '@styles/animations/animations'],
+      critical: ['@styles/critical'],
+      home: ['@scripts/home', '@styles/home/home']
+    })
+    .assets(['models', 'fonts'])
+    .assets('images')
+    .provide({
+      jquery: ["jQuery", "$"],
+    });
+
+    
   /**
    * Apply production-only settings
    * 
@@ -49,27 +71,6 @@ export default async (app) => {
         },
       })
   );
-  
-  /**
-   * Application assets & entrypoints
-   *
-   * @see {@link https://bud.js.org/reference/bud.entry}
-   * @see {@link https://bud.js.org/reference/bud.assets}
-   */
-  app
-    .entry({
-      app: ['@scripts/app', '@styles/app'],
-      editor: ['@scripts/editor', '@styles/editor'],
-      animations: ['@scripts/animations', '@styles/animations/animations'],
-      critical: ['@styles/critical'],
-      home: ['@scripts/home', '@styles/home/home']
-    })
-    .assets(['models', 'fonts'])
-    .assets('images')
-    .provide({
-      jquery: ["jQuery", "$"],
-    });
-  
   /**
    * Enable bud sourcemaps
    * 
