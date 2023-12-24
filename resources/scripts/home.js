@@ -6,8 +6,6 @@ import xp from '@scripts/xp';
 const home = {
     _sequenceRenderer: null,
 
-    _timeline: null,
-
     _onImageLoading(e) {
         const { imageIndex, loadProgress } = e.detail;
 
@@ -89,7 +87,7 @@ const home = {
             tile.removeClass('has-base-background-color');
         }
 
-        $('.tile.main .fade-in').each((index, element) => {
+        $('.tile .fade-in').each((index, element) => {
             if($(element).hasClass('has-accent-color')) {
                 $(element).css('color', '#212121');
                 $(element).removeClass('has-accent-color');
@@ -105,14 +103,13 @@ const home = {
         });
 
         let mainTimeline = gsap.timeline();
-        let mainTileTimeline = gsap.timeline();
 
         let timeline = gsap.timeline().to(scroll, {
             opacity: 0,
             scrollTrigger: {
                 start: "top top",
                 trigger: '.scroll',
-                markers: true,
+                markers: {startColor: "white", endColor: "white" },
                 pin: false,
                 end: "bottom center",
                 scrub: 0,
@@ -128,10 +125,11 @@ const home = {
             scrollTrigger: {
                 start: "bottom center",
                 trigger: '.scroll',
-                markers: true,
+                markers: {startColor: "red", endColor: "red" },
                 pin: false,
-                end: "bottom top", // end after scrolling 500px beyond the start
-                scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                snap: 1,
+                end: "bottom top",
+                scrub: 0,
             },
             onUpdate: () => {
                 console.log(`[home] drawing frame ${playhead.frame}`);
@@ -143,59 +141,48 @@ const home = {
 
         timeline = gsap.timeline({
             scrollTrigger: {
-                start: `top top`,
+                start: `top top+=44`,
                 trigger: '.tile.main',
-                markers: true,
+                markers: {startColor: "blue", endColor: "blue" },
                 pin: true,
-                end: "+=5000", // end after scrolling 500px beyond the start
-                scrub: 2.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                end: "+=2000", // end after scrolling 500px beyond the start
+                scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
             }
         });
 
         $('.tile.main .fade-in').each((index, element) => {
             timeline.to(element, {
                 opacity: 1, 
-                //yPercent: 5,
+                yPercent: 10,
                 color: '#e0e0e0',
             });
-            
         });
-        
+
+        timeline.to(playhead, {});
         mainTimeline.add(timeline, '>');
-        /*
-        $('.tile.main .fade-in').each((index, element) => {
-            mainTimeline.to(element, {
-                opacity: 1, 
-                yPercent: 5,
-                color: '#e0e0e0',
-                scrollTrigger: {
-                    start: `top top+=${5000 * (index ++ )}`,
-                    trigger: '.tile.main',
-                    pin: true,
-                    end: "+=2000", // end after scrolling 500px beyond the start
-                    scrub: 2.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-                },
-            });
-        });
-        */
         
-
+        
         /*
-        mainTimeline.to(playhead, {
-            frame: 60,
-            ease: 'ease-in',
-            onUpdate: () => {
-                console.log("update", playhead.frame);
-                this._sequenceRenderer.draw(playhead.frame);
+        timeline = gsap.timeline().to(playhead,
+            {
+                frame: 69,
+                ease: 'none',
+                scrollTrigger: {
+                    start: "top bottom",
+                    trigger: '.tile.main',
+                    markers: {startColor: "magenta", endColor: "magenta" },
+                    pin: true,
+                    snap: 1,
+                    end: "bottom top",
+                    scrub: 0,
+                },
+                onUpdate: () => {
+                    console.log(`[home] drawing frame ${playhead.frame}`);
+                    this._sequenceRenderer.draw(playhead.frame);
+                }
             }
-        });
-        */
-
-    },
-
-    _createTimeline() {
-        this._timeline = gsap.timeline();
-        console.log('[home] creating main tile timeline...');
+        );
+        mainTimeline.add(timeline, '>');*/
 
     },
     
@@ -205,8 +192,6 @@ const home = {
         xp.register();
 
         this._createSequenceRenderer();
-        this._createTimeline();
-
     }
 };
 

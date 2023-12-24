@@ -34,6 +34,20 @@ export default async (app) => {
      */
     () => app.splitChunks(),
 
+    /**
+     * Setup image compression
+     * 
+     * @see {@link https://bud.js.org/extensions/bud-imagemin}
+     */
+    () => app.imagemin
+      .encode(`png`, { quality: 100 })
+      .addPreset(`webp`, {
+        options: {
+          encodeOptions: {
+            webp: { quality: 100 },
+          },
+        },
+      })
   );
   
   /**
@@ -50,7 +64,8 @@ export default async (app) => {
       critical: ['@styles/critical'],
       home: ['@scripts/home', '@styles/home/home']
     })
-    .assets(['images', 'models', 'fonts'])
+    .assets(['models', 'fonts'])
+    .assets('images')
     .provide({
       jquery: ["jQuery", "$"],
     });

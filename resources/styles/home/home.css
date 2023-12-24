@@ -51,10 +51,12 @@
 
 .home-container .tile.middle {
     /*margin-top: var(--xp-header-height);*/
+    border: 1px solid blue;
 }
 
 .home-container .tile.last {
     height: calc(100vh - var(--xp-header-height) - var(--xp-footer-height));
+    border: 1px solid magenta;
 }
 
 .home-container .down-arrow {
