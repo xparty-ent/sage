@@ -1,9 +1,11 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
 import domReady from '@roots/sage/client/dom-ready';
 import xp from '@scripts/xp';
 
 const home = {
+    _scrollMarkers: true,
     _sequenceRenderer: null,
 
     _onImageLoading(e) {
@@ -92,6 +94,11 @@ const home = {
                 $(element).css('color', '#212121');
                 $(element).removeClass('has-accent-color');
             }
+
+            if($(element).hasClass('has-contrast-background-color')) {
+                $(element).css('background-color', '#bdbdbd');
+                $(element).removeClass('has-contrast-background-color');
+            }
         });
         
         // draw the first frame
@@ -109,7 +116,7 @@ const home = {
             scrollTrigger: {
                 start: "top top",
                 trigger: '.scroll',
-                markers: {startColor: "white", endColor: "white" },
+                markers: this._scrollMarkers ? {startColor: "white", endColor: "white" } : false,
                 pin: false,
                 end: "bottom center",
                 scrub: 0,
@@ -125,9 +132,8 @@ const home = {
             scrollTrigger: {
                 start: "bottom center",
                 trigger: '.scroll',
-                markers: {startColor: "red", endColor: "red" },
+                markers: this._scrollMarkers ? {startColor: "red", endColor: "red" } : false,
                 pin: false,
-                snap: 1,
                 end: "bottom top",
                 scrub: 0,
             },
@@ -143,36 +149,46 @@ const home = {
             scrollTrigger: {
                 start: `top top+=44`,
                 trigger: '.tile.main',
-                markers: {startColor: "blue", endColor: "blue" },
+                markers: this._scrollMarkers ? { startColor: "blue", endColor: "blue" } : false,
                 pin: true,
-                end: "+=2000", // end after scrolling 500px beyond the start
+                end: "bottom top", // end after scrolling 500px beyond the start
                 scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
             }
         });
 
         $('.tile.main .fade-in').each((index, element) => {
+            console.log($(element).text());
+            const text = $(element).text().trim();
             timeline.to(element, {
-                opacity: 1, 
+                //opacity: 1, 
                 yPercent: 10,
-                color: '#e0e0e0',
+                //color: '#e0e0e0',
+                text: {
+                    value: text
+                }
             });
+
+            $(element).css('opacity', 1);
+            $(element).text('');
         });
 
         timeline.to(playhead, {});
         mainTimeline.add(timeline, '>');
         
         
-        /*
-        timeline = gsap.timeline().to(playhead,
+        
+        timeline = gsap.timeline().fromTo(playhead,
+            {
+                frame: 30
+            },
             {
                 frame: 69,
                 ease: 'none',
                 scrollTrigger: {
-                    start: "top bottom",
-                    trigger: '.tile.main',
-                    markers: {startColor: "magenta", endColor: "magenta" },
+                    start: "top top+=44",
+                    trigger: '.tile.middle',
+                    markers: this._scrollMarkers ? {startColor: "magenta", endColor: "magenta" } : false,
                     pin: true,
-                    snap: 1,
                     end: "bottom top",
                     scrub: 0,
                 },
@@ -182,14 +198,14 @@ const home = {
                 }
             }
         );
-        mainTimeline.add(timeline, '>');*/
+        mainTimeline.add(timeline, '>');
 
     },
     
     register() {
         console.log("[home] registering home...")
         gsap.registerPlugin(ScrollTrigger);
-        xp.register();
+        gsap.registerPlugin(TextPlugin);
 
         this._createSequenceRenderer();
     }
