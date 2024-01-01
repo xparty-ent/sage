@@ -1,10 +1,5 @@
 const CURRENT_CACHES = [
     {
-        name: `3d-models-cache`,
-        contentTypeMatch: null,
-        urlMatch: /\.glb/
-    },
-    {
         name: `fonts-cache`,
         contentTypeMatch: null, 
         urlMatch: /\.ttf|\.otf/i,
