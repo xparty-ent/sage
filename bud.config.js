@@ -64,8 +64,7 @@ export default async (app) => {
       critical: ['@styles/critical'],
       home: ['@scripts/home', '@styles/home/home']
     })
-    .assets(['models', 'fonts'])
-    .assets('images')
+    .assets(['images', 'fonts'])
     .provide({
       jquery: ["jQuery", "$"],
     });
