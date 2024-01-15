@@ -189,41 +189,52 @@ const home = {
     animateMainTile() {
         const timeline = gsap.timeline()
             .to($('.tile.main .wp-block-cover div[role="img"]'), {
-                transform: 'scale(1.0)',
+                scale: '1.0',
                 ease: 'power4',
-                duration: 1.5
+                duration: 1
             });
         
-        $('.tile.main .wp-block-cover p .split-char').each((index, element) => {
-            timeline.to(element, {
-                duration: 0.01,
-                opacity: 1,
-                ease: "power4"
-            });
+        timeline.to($('.tile.main .wp-block-cover p .split-line'), {
+            y: 0,
+            duration: 1.8,
+            ease: "power4",
+            stagger: 0.1
         });
 
-        $('.tile.main .wp-block-cover .scroll .arrow').each((index, element) => {
-            timeline.to(element, {
-                duration: 0.5,
-                opacity: 1,
-                ease: "power4"
-            });
+        timeline.to($('.tile.main .wp-block-cover .scroll'), {
+            duration: 1,
+            opacity: 1,
+            ease: "power4"
+        });
+
+        gsap.to($('.tile.main .wp-block-cover div[role="img"]'), {
+            backgroundPosition: "50% 0%",
+            ease: "none",
+            scrollTrigger: {
+                trigger: '.tile.main .wp-block-cover',
+                start: "top top+=44",
+                end: "bottom top",
+                markers: this._scrollMarkers ? {startColor: "magenta", endColor: "magenta" } : false,
+                scrub: true,
+            }, 
         });
     },
 
     onLoaderFaded() {
+        window.scrollTo(0, 0);
         this.animateMainTile();
     },
 
     prepareElements() {
         $('.tile.main .wp-block-cover div[role="img"]').css('transform', 'scale(1.5)');
-        $('.tile.main .wp-block-cover .scroll .arrow').css('opacity', 0);
+        $('.tile.main .wp-block-cover .scroll').css('opacity', 0);
         
         $('.tile.main .wp-block-cover p').each((index, element) => {
-            const lines = new SplitType(element, { types: 'lines' });
-            lines.lines.forEach((line, index) => {
-                console.log(line);
-                new SplitType(line, { types: 'chars', charClass: 'split-char' });
+            const lines = new SplitType(element, { types: 'lines', lineClass: 'split-line' });
+            lines.lines.forEach((line) => {
+                const wrapper = $('<div/>').addClass('split-line-wrapper');
+                $(line).detach().appendTo(wrapper);
+                $(element).append(wrapper);
             });
         });
 
