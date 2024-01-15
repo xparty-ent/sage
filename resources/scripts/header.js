@@ -1,6 +1,4 @@
-import domReady from "@roots/sage/client/dom-ready";
-
-const navbar = {
+const header = {
     register: () => {
         const toggle = $('.mobile-menu-toggle');
         const nav = $('nav.nav-primary');
@@ -13,8 +11,4 @@ const navbar = {
     }
 };
 
-domReady(() => {
-    navbar.register();
-});
-
-window.navbar = navbar;
+export default header;

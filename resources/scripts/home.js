@@ -1,8 +1,10 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
+import SplitType from 'split-type'
 import domReady from '@roots/sage/client/dom-ready';
 import xp from '@scripts/xp';
+import loader from '@scripts/loader';
 
 const home = {
     _scrollMarkers: true,
@@ -12,40 +14,16 @@ const home = {
         const { imageIndex, loadProgress } = e.detail;
 
         if(imageIndex) return;
-        const bar = $('.loader .bar');
-        
-        gsap.to(bar, {        
-            width: `${loadProgress}%`,
-            duration: 0.5
-        })
 
     },
 
     _onSequenceImageLoaded(e) {
-        const bar = $('.loader .bar');
-        const loader = $('.loader');
-        const scroll = $('.scroll');
         const { loadedImages, imagesCount, imageIndex } = e.detail; 
         const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
+        loader.markItemLoaded();
+
         console.log(`[home] loaded frame ${imageIndex}, loaded ${loadedImages}/${imagesCount} images, progress: ${loadedPercentage}%`);
         
-        if(!imageIndex) {    
-            gsap.timeline({
-                onComplete: () => this._createMainTileTimeline()
-            })
-            .to(bar, {        
-                width: '100%',
-                duration: 0.5
-            })
-            .to(loader, {
-                opacity: 0,
-                duration: 1,
-            })
-            .to(scroll, {
-                opacity: 1,
-                duration: 0.5,
-            });
-        }
     },
 
     _onSequenceImagesLoaded() {
@@ -65,6 +43,8 @@ const home = {
             }
         });
 
+        loader.registerItems(1);
+
         this._sequenceRenderer.load();
 
         this._sequenceRenderer.on('image-loading', e => this._onImageLoading(e));
@@ -77,6 +57,7 @@ const home = {
         const tile = $('.tile.main');
         const canvas = $('.renderer canvas');
         const scroll = $('.scroll');
+        const prologue = $('.prologue');
         canvas.css('opacity', 0);
 
         const playhead = { 
@@ -104,14 +85,17 @@ const home = {
         // draw the first frame
         this._sequenceRenderer.draw(0);
 
-        gsap.to(canvas, {
-           opacity: 1,
-           duration: 1 
+        let timeline = gsap.timeline().to(canvas, {
+            opacity: 1,
+            duration: 0.5
         });
-
+        
         let mainTimeline = gsap.timeline();
 
-        let timeline = gsap.timeline().to(scroll, {
+
+        /*
+
+        timeline = gsap.timeline().to(scroll, {
             opacity: 0,
             scrollTrigger: {
                 start: "top top",
@@ -199,13 +183,58 @@ const home = {
             }
         );
         mainTimeline.add(timeline, '>');
+        */
+    },
 
+    animateMainTile() {
+        const timeline = gsap.timeline()
+            .to($('.tile.main .wp-block-cover div[role="img"]'), {
+                transform: 'scale(1.0)',
+                ease: 'power4',
+                duration: 1.5
+            });
+        
+        $('.tile.main .wp-block-cover p .split-char').each((index, element) => {
+            timeline.to(element, {
+                duration: 0.01,
+                opacity: 1,
+                ease: "power4"
+            });
+        });
+
+        $('.tile.main .wp-block-cover .scroll .arrow').each((index, element) => {
+            timeline.to(element, {
+                duration: 0.5,
+                opacity: 1,
+                ease: "power4"
+            });
+        });
+    },
+
+    onLoaderFaded() {
+        this.animateMainTile();
+    },
+
+    prepareElements() {
+        $('.tile.main .wp-block-cover div[role="img"]').css('transform', 'scale(1.5)');
+        $('.tile.main .wp-block-cover .scroll .arrow').css('opacity', 0);
+        
+        $('.tile.main .wp-block-cover p').each((index, element) => {
+            const lines = new SplitType(element, { types: 'lines' });
+            lines.lines.forEach((line, index) => {
+                console.log(line);
+                new SplitType(line, { types: 'chars', charClass: 'split-char' });
+            });
+        });
+
+        $(window).on('loader-faded', () => this.onLoaderFaded());
     },
     
     register() {
         console.log("[home] registering home...")
         gsap.registerPlugin(ScrollTrigger);
         gsap.registerPlugin(TextPlugin);
+        this.prepareElements();
 
         this._createSequenceRenderer();
     }

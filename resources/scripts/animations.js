@@ -16,9 +16,9 @@ const animations = {
 
 
             gsap.fromTo(state, {
-                y: () => i ? positionY - 10 : positionY
+                y: () => i ? positionY - 20 : positionY
               }, {
-                y: () => positionY + 10,
+                y: () => positionY + 20,
                 ease: "none",
                 scrollTrigger: {
                   trigger: element,

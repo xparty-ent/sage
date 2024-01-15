@@ -1,0 +1,41 @@
+.loader {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    background-color: var(--wp--preset--color--accent);
+}
+
+.loader .bar {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 10px;
+    width: 70vw;
+    padding-left: 2px;
+    padding-right: 2px;
+    max-width: 250px;
+    border: 2px solid var(--wp--preset--color--contrast);
+}
+
+.loader .bar p {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    font-family: 'tstar';
+    color: var(--wp--preset--color--base);
+    top: -50%;
+    margin-top: 0;
+}
+
+.loader .bar .filler {
+    width: 0%;
+    height: calc(100% - 4px);
+    margin-top: 2px;
+    background-color: var(--wp--preset--color--base);
+}
+
+.loader.loaded {
+    opacity: 0 !important;
+}

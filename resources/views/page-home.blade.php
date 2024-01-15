@@ -1,13 +1,10 @@
 @extends('layouts.app')
 
 @section('page-content')
+<!--<div class="renderer">
+</div>-->
 <div class="home-container">
-    <div class="renderer">
-        <div class="loader">
-            <div class="bar"></div>
-        </div>
-    </div>
-    <ul class="pagination">
+    <!--<ul class="pagination">
         <li class="main active"></li>
         <li class="middle"></li>
         <li class="last"></li>
@@ -19,7 +16,7 @@
             <div class="arrow"></div>
             <div class="arrow"></div>
         </div>
-    </div>
+    </div>-->
     @php(the_content())
 </div>
 @endsection

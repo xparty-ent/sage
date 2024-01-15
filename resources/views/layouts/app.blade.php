@@ -10,6 +10,13 @@
     <!-- WP Start -->
     @php(wp_body_open())
     
+    <div class="loader">
+        <div class="bar">
+          <p>0%</p>
+          <div class="filler"></div>
+        </div>
+    </div>
+    
     @if(!isset($hideHeader) || !$hideHeader)
       @php(do_action('get_header'))
     @endif
