@@ -26,10 +26,8 @@
     border: 1px solid white;
 }
 
-/*
 @media only screen and (max-width: 600px) {
     .mouse, .mouse-outer {
         display: none;
     }
 }
-*/

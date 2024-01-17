@@ -1,13 +1,40 @@
+import gsap from 'gsap';
 const header = {
-    register: () => {
-        const toggle = $('.mobile-menu-toggle');
-        const nav = $('nav.nav-primary');
+    _nav: null,
+    _toggle: null,
 
-        toggle.on('click', (e) => {
-            e.preventDefault();
-            toggle.toggleClass('active');
-            nav.toggleClass('active');
+    _runFadeAnimation() {
+        gsap.from($('.nav a'), {
+           opacity: 0,
+           delay: 0.5,
+           stagger: 0.1
         });
+    },
+
+    _onWindowLoad() {
+        this._runFadeAnimation();
+    },
+
+    _onLoaderFaded() {
+        $('.mobile-menu-toggle').addClass('active');
+    },
+
+    _onToggleClick(e) {
+        e.preventDefault();
+        this._nav.toggleClass('active');
+
+        if(this._nav.hasClass('active')) {
+            this._runFadeAnimation();
+        }
+    },
+
+    register() {
+        this._nav = $('header.banner');
+
+        $('.mobile-menu-toggle').on('click', (e) => this._onToggleClick(e));
+
+        $(window).on('load', () => this._onWindowLoad());
+        $(window).on('loader-faded', () => this._onLoaderFaded());
     }
 };
 

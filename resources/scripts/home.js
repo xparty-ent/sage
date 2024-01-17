@@ -7,7 +7,7 @@ import xp from '@scripts/xp';
 import loader from '@scripts/loader';
 
 const home = {
-    _scrollMarkers: true,
+    _scrollMarkers: false,
     _sequenceRenderer: null,
 
     _onImageLoading(e) {

@@ -25,26 +25,15 @@ header.banner a:hover {
     color: #e0e0e0;
 }
 
-@media only screen and (max-width: 600px) {
-    a.brand {
-        margin-left: unset;
-        position: unset;
-        left: unset;
-    }
-}
-
-.mobile-menu-toggle {
-    height: 25px;
-    width: 25px;
-    position: absolute;
-    right: 2vh;
+.mobile-menu-toggle.active {
+    opacity: 1;
 }
 
 .mobile-menu-toggle:after,
 .mobile-menu-toggle:before,
 .mobile-menu-toggle span {
     content: "";
-    background: #212121;
+    background: var(--wp--preset--color--accent);
     width: 70%;
     height: 2px;
     position: absolute;
@@ -53,15 +42,21 @@ header.banner a:hover {
     transition: all 0.25s ease-in;
 }
 
-.mobile-menu-toggle.active:after {
-    transform: translate(-50%, -50%) rotate(45deg);
-    top: 50%;
+header.banner.active .mobile-menu-toggle {
+    background-color: var(--wp--preset--color--accent);
 }
 
-.mobile-menu-toggle.active:before {
+header.banner.active .mobile-menu-toggle:after {
+    transform: translate(-50%, -50%) rotate(45deg);
+    top: 50%;
+    background-color: var(--wp--preset--color--base);
+}
+
+header.banner.active .mobile-menu-toggle:before {
     transform: translate(-50%, -50%) rotate(-45deg);
     bottom: 0%;
     top: 50%;
+    background-color: var(--wp--preset--color--base);
 }
 
 .mobile-menu-toggle span {
@@ -70,7 +65,7 @@ header.banner a:hover {
     opacity: 1;
 }
 
-.mobile-menu-toggle.active span {
+header.banner.active .mobile-menu-toggle span {
     opacity: 0;
 }
 
@@ -97,52 +92,21 @@ nav.nav-primary {
     height: 100%;
 }
 
-@media only screen and (max-width: 600px) {
-    nav.nav-primary {
-        left: 100%;
-        position: fixed;
-        width: 40vw;
-        top: var(--xp-header-height);
-        height: calc(100vh - var(--xp-header-height));
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        align-content: space-around;
-        background-color: #bdbdbd;
-        border-top: 1px solid #212121;
-        transition: right 0.5s ease-in, left 0.5s ease-in;
-        z-index: 1;
-    }
-
-    nav.nav-primary.active {
-        left: calc(100vw - 40vw);
-    }
-
-    nav.nav-primary:before {
-        content: "";
-        background: #21212160;
-        width: calc(100vw - 40vw);
-        position: fixed;
-        left: 0;
-        height: 100%;
-        top: var(--xp-header-height);
-        opacity: 0;
-        z-index: 1;
-        transition: opacity 0.5s ease-in;
-    }
-
-    nav.nav-primary.active:before {
-        opacity: 1;
-    }
+nav.nav-primary .title {
+    display: none;
+    font-family: 'tstar';
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: var(--wp--preset--font-size--small);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    margin-top: 20px;
 }
 
 nav.nav-primary .nav a {
     padding-right: 10px;
     padding-left: 10px;
     display: inherit;
-    /* padding-top: 1em; */
-    /* padding-bottom: 1em; */
     height: 100%;
     vertical-align: middle;
     text-align: center;
@@ -150,6 +114,77 @@ nav.nav-primary .nav a {
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 600px) {
+    a.brand {
+        margin-left: unset;
+        position: unset;
+        left: unset;
+    }
+
+    nav.nav-primary .title {
+        display: block !important;
+    }
+
+    nav.nav-primary {
+        left: 100%;
+        position: fixed;
+        width: 70vw;
+        /* top: 44px; */
+        top: var(--xp-header-height);
+        /* height: calc(100vh - 44px); */
+        height: calc(100vh - var(--xp-header-height));
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        align-content: flex-start;
+        background-color: #bdbdbd;
+        border-top: 1px solid #212121;
+        transition: right 0.5s ease-in, left 0.5s ease-in;
+        z-index: 1;
+        flex-direction: column;
+    }
+
+    header.banner.active nav.nav-primary {
+        left: calc(100vw - 70vw);
+    }
+
+    nav.nav-primary:before {
+        content: "";
+        background: #21212160;
+        width: 100vw;
+        position: fixed;
+        left: 0;
+        height: 100%;
+        top: var(--xp-header-height);
+        opacity: 0;
+        z-index: 1;
+        transition: opacity 0.5s ease-in, width 0.5s ease-in;
+    }
+
+    header.banner.active nav.nav-primary:before {
+        width: calc(100vw - 70vw);
+        opacity: 1;
+    }
+    
+    nav.nav-primary .nav {
+        flex-direction: column !important;
+        padding: 0;
+        justify-content: flex-start;
+        align-items: flex-start;
+        align-content: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    nav.nav-primary .nav>li {
+        margin-top: 10px;
+    }
+
+    nav.nav-primary .nav a {
+        padding-left: 30px;
+    }
 }
 
 nav.nav-primary .nav>li>ul.sub-menu {
@@ -210,18 +245,6 @@ nav.nav-primary .nav {
 }
 
 
-@media only screen and (max-width: 600px) {
-    nav.nav-primary .nav {
-        flex-direction: column;
-        padding: 0;
-        justify-content: center;
-        align-items: flex-start;
-        align-content: center;
-        flex-wrap: wrap;
-    }
-}
-
-
 header nav.nav-primary>.menu-navigation-container {
     /*padding-top: 3px*/
     height: 100%;
@@ -231,13 +254,6 @@ header nav.nav-primary>.menu-navigation-container {
 nav.nav-primary .nav>li {
     text-transform: uppercase;
     letter-spacing: .2em
-}
-
-
-@media only screen and (max-width: 600px) {
-    nav.nav-primary .nav>li {
-        margin-top: 10px;
-    }
 }
 
 nav.nav-primary .nav>li>a:after,

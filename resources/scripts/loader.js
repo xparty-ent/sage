@@ -38,7 +38,7 @@ const loader = {
     },
 
     _refreshBar() {
-        const perc = ((this._loadedItems + this._loadedTicks) / (this._items + MAX_LOAD_TICKS)) * 100;
+        const perc = Math.min(100, ((this._loadedItems + this._loadedTicks) / (this._items + MAX_LOAD_TICKS)) * 100);
         gsap.to(this._bar, {
             width: `${perc}%`,
             ease: 'linear',
