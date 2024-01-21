@@ -89,14 +89,14 @@ const home = {
 
         gsap.to(playhead, {
             frame: 69,
-            ease: 'none',
+            ease: 'linear',
             scrollTrigger: {
                 start: "top top+=44",
                 trigger: '.tile.middle',
                 markers: this._scrollMarkers ? {startColor: "red", endColor: "red" } : false,
                 pin: true,
                 end: "bottom top",
-                scrub: 0,
+                scrub: 1,
             },
             onUpdate: () => {
                 console.log(`[home] drawing frame ${playhead.frame}`);
@@ -140,7 +140,7 @@ const home = {
                 start: "top top+=44",
                 end: "bottom top",
                 markers: this._scrollMarkers ? {startColor: "magenta", endColor: "magenta" } : false,
-                scrub: true,
+                scrub: false,
             }, 
         });
 

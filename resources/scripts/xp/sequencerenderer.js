@@ -12,6 +12,8 @@ class sequencerenderer extends EventTarget  {
         this.manifest = null;
         this.images = null;
         this.queue = null;
+        this.width = 0;
+        this.height = 0;
         
         this.canvas = $('<canvas/>');
         this.container.append(this.canvas);
@@ -43,13 +45,13 @@ class sequencerenderer extends EventTarget  {
     }
 
     _onCanvasResize() {
-        const w = this.container.width();
-        const h = this.container.height();
-        this.canvas.attr('width', `${w}px`);
-        this.canvas.attr('height', `${h}px`);
-        this._emit('resize', { width: w, height: h });
+        this.width = this.container.width();
+        this.height = this.container.height();
+        this.canvas.attr('width', `${this.width}px`);
+        this.canvas.attr('height', `${this.height   }px`);
+        this._emit('resize', { width: this.width, height: this.height });
 
-        console.log(`[sequencerenderer] canvas resized - ${w}x${h}`);
+        console.log(`[sequencerenderer] canvas resized - ${this.width}x${this.height}`);
     }
 
     _getManifestUrl() {
@@ -185,8 +187,8 @@ class sequencerenderer extends EventTarget  {
 
         const image = this.images[index];
 
-        const w = this.canvas.width();
-        const h = this.canvas.height();
+        const w = this.width;
+        const h = this.height;
 
         var iw = image.width,
             ih = image.height,
