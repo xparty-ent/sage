@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('page-content')
-<!--<div class="renderer">
-</div>-->
 <div class="home-container">
     @php(the_content())
 </div>

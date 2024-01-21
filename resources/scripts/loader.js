@@ -33,6 +33,8 @@ const loader = {
             duration: 0.5,
             onComplete: () => {
                 $('.loader').css('display', 'none');
+                $('body').css('overflow-y', 'unset');
+                window.scrollTo(0, 0);
             }
         });
     },
@@ -50,7 +52,7 @@ const loader = {
                 this._label.text(`${Math.floor(progress)}%`);
             },
             onComplete: () => {
-                if(perc != 100) return;
+                if(perc < 99) return;
                 this._fadeIn();
             }
         });

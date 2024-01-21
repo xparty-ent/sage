@@ -7,8 +7,10 @@ import xp from '@scripts/xp';
 import loader from '@scripts/loader';
 
 const home = {
-    _scrollMarkers: false,
+    _scrollMarkers: true,
     _sequenceRenderer: null,
+
+    _mainTileTimeline: gsap.timeline(),
 
     _onImageLoading(e) {
         const { imageIndex, loadProgress } = e.detail;
@@ -24,6 +26,9 @@ const home = {
 
         console.log(`[home] loaded frame ${imageIndex}, loaded ${loadedImages}/${imagesCount} images, progress: ${loadedPercentage}%`);
         
+        if(imageIndex == 0) {
+            this._createRendererTimeline()
+        }
     },
 
     _onSequenceImagesLoaded() {
@@ -32,7 +37,7 @@ const home = {
 
     _createSequenceRenderer() {
         console.log(`[home] creating sequence renderer...`);
-        const element = $('.renderer').first();
+        const element = $('.tile.middle .renderer').first();
         this._sequenceRenderer = xp.sequencerenderer.create(element, window.home.mainSequence, {
             "frames": {
                 "start": 1,
@@ -53,12 +58,10 @@ const home = {
     },
 
     
-    _createMainTileTimeline() {
+    _createRendererTimeline() {
         const tile = $('.tile.main');
-        const canvas = $('.renderer canvas');
         const scroll = $('.scroll');
         const prologue = $('.prologue');
-        canvas.css('opacity', 0);
 
         const playhead = { 
             frame: 0 
@@ -82,42 +85,16 @@ const home = {
             }
         });
         
-        // draw the first frame
         this._sequenceRenderer.draw(0);
 
-        let timeline = gsap.timeline().to(canvas, {
-            opacity: 1,
-            duration: 0.5
-        });
-        
-        let mainTimeline = gsap.timeline();
-
-
-        /*
-
-        timeline = gsap.timeline().to(scroll, {
-            opacity: 0,
-            scrollTrigger: {
-                start: "top top",
-                trigger: '.scroll',
-                markers: this._scrollMarkers ? {startColor: "white", endColor: "white" } : false,
-                pin: false,
-                end: "bottom center",
-                scrub: 0,
-            },
-        });
-        
-        mainTimeline.add(timeline, '>');
-
-
-        timeline = gsap.timeline().to(playhead, {
-            frame: 30,
+        gsap.to(playhead, {
+            frame: 69,
             ease: 'none',
             scrollTrigger: {
-                start: "bottom center",
-                trigger: '.scroll',
+                start: "top top+=44",
+                trigger: '.tile.middle',
                 markers: this._scrollMarkers ? {startColor: "red", endColor: "red" } : false,
-                pin: false,
+                pin: true,
                 end: "bottom top",
                 scrub: 0,
             },
@@ -127,87 +104,35 @@ const home = {
             }
         });
 
-        mainTimeline.add(timeline, '>');
-
-        timeline = gsap.timeline({
-            scrollTrigger: {
-                start: `top top+=44`,
-                trigger: '.tile.main',
-                markers: this._scrollMarkers ? { startColor: "blue", endColor: "blue" } : false,
-                pin: true,
-                end: "bottom top", // end after scrolling 500px beyond the start
-                scrub: 0, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-            }
-        });
-
-        $('.tile.main .fade-in').each((index, element) => {
-            console.log($(element).text());
-            const text = $(element).text().trim();
-            timeline.to(element, {
-                //opacity: 1, 
-                yPercent: 10,
-                //color: '#e0e0e0',
-                text: {
-                    value: text
-                }
-            });
-
-            $(element).css('opacity', 1);
-            $(element).text('');
-        });
-
-        timeline.to(playhead, {});
-        mainTimeline.add(timeline, '>');
-        
-        
-        
-        timeline = gsap.timeline().fromTo(playhead,
-            {
-                frame: 30
-            },
-            {
-                frame: 69,
-                ease: 'none',
-                scrollTrigger: {
-                    start: "top top+=44",
-                    trigger: '.tile.middle',
-                    markers: this._scrollMarkers ? {startColor: "magenta", endColor: "magenta" } : false,
-                    pin: true,
-                    end: "bottom top",
-                    scrub: 0,
-                },
-                onUpdate: () => {
-                    console.log(`[home] drawing frame ${playhead.frame}`);
-                    this._sequenceRenderer.draw(playhead.frame);
-                }
-            }
-        );
-        mainTimeline.add(timeline, '>');
-        */
     },
 
-    animateMainTile() {
-        const timeline = gsap.timeline()
-            .to($('.tile.main .wp-block-cover div[role="img"]'), {
-                scale: '1.0',
-                ease: 'power4',
-                duration: 1
-            });
+    createMainTileTimeline() {
+        this._mainTileTimeline.to($('.tile.main .wp-block-cover div[role="img"]'), {
+            scale: '1.0',
+            ease: 'power4',
+            duration: 1
+        }, 0);
         
-        timeline.to($('.tile.main .wp-block-cover p .split-line'), {
+        this._mainTileTimeline.from($('.tile.main .wp-block-cover span'), {
+            background: 'transparent',
+            ease: 'power4',
+            duration: 1
+        }, 0);
+        
+        this._mainTileTimeline.to($('.tile.main .wp-block-cover p .split-line'), {
             y: 0,
             duration: 1.8,
             ease: "power4",
             stagger: 0.1
         });
 
-        timeline.to($('.tile.main .wp-block-cover .scroll'), {
+        this._mainTileTimeline.to($('.tile.main .wp-block-cover .scroll'), {
             duration: 1,
             opacity: 1,
             ease: "power4"
         });
 
-        gsap.to($('.tile.main .wp-block-cover div[role="img"]'), {
+        this._mainTileTimeline.to($('.tile.main .wp-block-cover div[role="img"]'), {
             backgroundPosition: "50% 0%",
             ease: "none",
             scrollTrigger: {
@@ -218,11 +143,13 @@ const home = {
                 scrub: true,
             }, 
         });
+
+        this._mainTileTimeline.pause();
     },
 
     onLoaderFaded() {
         window.scrollTo(0, 0);
-        this.animateMainTile();
+        this._mainTileTimeline.play();
     },
 
     prepareElements() {
@@ -246,6 +173,7 @@ const home = {
         gsap.registerPlugin(ScrollTrigger);
         gsap.registerPlugin(TextPlugin);
         this.prepareElements();
+        this.createMainTileTimeline();
 
         this._createSequenceRenderer();
     }
