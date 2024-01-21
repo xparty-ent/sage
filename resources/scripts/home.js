@@ -11,6 +11,7 @@ const home = {
     _sequenceRenderer: null,
 
     _mainTileTimeline: gsap.timeline(),
+    _middleTileTimeline: gsap.timeline(),
 
     _onImageLoading(e) {
         const { imageIndex, loadProgress } = e.detail;
@@ -87,9 +88,7 @@ const home = {
         
         this._sequenceRenderer.draw(0);
 
-        gsap.to(playhead, {
-            frame: 69,
-            ease: 'linear',
+        let timeline = gsap.timeline({
             scrollTrigger: {
                 start: "top top+=44",
                 trigger: '.tile.middle',
@@ -97,12 +96,23 @@ const home = {
                 pin: true,
                 end: "bottom top",
                 scrub: 1,
-            },
+            }
+        })
+        .to($('.tile.middle .renderer .overlay'), {
+            backgroundColor: 'transparent',
+            ease: 'linear'
+        }, 0)
+        .to(playhead, {
+            frame: 69,
+            ease: 'linear',
             onUpdate: () => {
                 console.log(`[home] drawing frame ${playhead.frame}`);
                 this._sequenceRenderer.draw(playhead.frame);
             }
-        });
+        })
+        
+        this._middleTileTimeline.add(timeline, '>');
+
 
     },
 
@@ -150,6 +160,7 @@ const home = {
     onLoaderFaded() {
         window.scrollTo(0, 0);
         this._mainTileTimeline.play();
+        $('.tile.middle .renderer .overlay').css('background-color', $('.tile.middle').css('background-color'));
     },
 
     prepareElements() {
@@ -167,7 +178,7 @@ const home = {
 
         $(window).on('loader-faded', () => this.onLoaderFaded());
     },
-    
+
     register() {
         console.log("[home] registering home...")
         gsap.registerPlugin(ScrollTrigger);

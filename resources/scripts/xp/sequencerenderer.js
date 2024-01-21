@@ -17,6 +17,7 @@ class sequencerenderer extends EventTarget  {
         
         this.canvas = $('<canvas/>');
         this.container.append(this.canvas);
+        this.container.append($('<div/>').addClass('overlay'));
 
         this.context = this.canvas.get(0).getContext("2d");
         this.currentIndex = -1;
@@ -180,12 +181,13 @@ class sequencerenderer extends EventTarget  {
     draw(index) {
         index = this._findNearestLoadedIndex(index);
 
-        if(index === null || this.currentIndex === index)
+        const image = this.images[index];
+
+        if(!image || index === null || this.currentIndex === index)
             return;
 
         this.currentIndex = index;
 
-        const image = this.images[index];
 
         const w = this.width;
         const h = this.height;
