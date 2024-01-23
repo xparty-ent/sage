@@ -123,10 +123,10 @@
 .home-container .wp-block-cover:first-child .scroll .arrow:nth-child(3) { animation-delay: 2s; }
 
 /* main tile cover text */
-.tile.main .wp-block-cover p .split-line-wrapper {
+.split-line-wrapper {
     overflow: hidden;
 }
 
-.tile.main .wp-block-cover p .split-line {
+.split-line {
     transform: translate(0px, 50px);
 }

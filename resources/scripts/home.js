@@ -94,14 +94,65 @@ const home = {
                 trigger: '.tile.middle',
                 markers: this._scrollMarkers ? {startColor: "red", endColor: "red" } : false,
                 pin: true,
-                end: "bottom top",
-                scrub: 1,
+                end: "bottom+=10000 top",
+                scrub: true,
             }
+        })
+        .to($('.tile.middle h2 .split-line'), {
+            y: 0,
+            ease: "power4",
+            stagger: 0.1,
+            duration: 0.5
+        });
+
+        $('.tile.middle .wp-block-column').each((index, element) => {
+            timeline.to(element, {
+                opacity: 1,
+                ease: "power4",
+                duration: 0.5
+            })
+            .to($(element).find('img'), {
+                opacity: 1,
+                ease: "power4",
+                duration: 0.5
+            })
+            .to($(element).find('p .split-line'), {
+                y: 0,
+                ease: "power4",
+                stagger: 0.1,
+                duration: 0.5
+            });
+        });
+        
+        $('.tile.middle .wp-block-column').each((index, element) => {
+            timeline.to($(element).find('p .split-line'), {
+                y: 50,
+                ease: "power4",
+                stagger: 0.1,
+                duration: 0.5
+            })
+            .to($(element).find('img'), {
+                opacity: 0,
+                ease: "power4",
+                duration: 0.5
+            })
+            .to(element, {
+                opacity: 0,
+                ease: "power4",
+                duration: 0.5
+            });
+        });
+        
+        timeline.to($('.tile.middle h2 .split-line'), {
+            y: 50,
+            ease: "power4",
+            stagger: 0.1,
+            duration: 0.5
         })
         .to($('.tile.middle .renderer .overlay'), {
             backgroundColor: 'transparent',
             ease: 'linear'
-        }, 0)
+        })
         .to(playhead, {
             frame: 69,
             ease: 'linear',
@@ -168,6 +219,26 @@ const home = {
         $('.tile.main .wp-block-cover .scroll').css('opacity', 0);
         
         $('.tile.main .wp-block-cover p').each((index, element) => {
+            const lines = new SplitType(element, { types: 'lines', lineClass: 'split-line' });
+            lines.lines.forEach((line) => {
+                const wrapper = $('<div/>').addClass('split-line-wrapper');
+                $(line).detach().appendTo(wrapper);
+                $(element).append(wrapper);
+            });
+        });
+        
+        $('.tile.middle h2').each((index, element) => {
+            const lines = new SplitType(element, { types: 'lines', lineClass: 'split-line' });
+            lines.lines.forEach((line) => {
+                const wrapper = $('<div/>').addClass('split-line-wrapper');
+                $(line).detach().appendTo(wrapper);
+                $(element).append(wrapper);
+            });
+        });
+
+        $('.tile.middle .wp-block-column').css('opacity', 0);
+        $('.tile.middle .wp-block-column img').css('opacity', 0);
+        $('.tile.middle .wp-block-column p').each((index, element) => {
             const lines = new SplitType(element, { types: 'lines', lineClass: 'split-line' });
             lines.lines.forEach((line) => {
                 const wrapper = $('<div/>').addClass('split-line-wrapper');
