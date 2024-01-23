@@ -61,8 +61,7 @@ const home = {
     
     _createRendererTimeline() {
         const tile = $('.tile.main');
-        const scroll = $('.scroll');
-        const prologue = $('.prologue');
+        
 
         const playhead = { 
             frame: 0 
@@ -86,6 +85,9 @@ const home = {
             }
         });
         
+        const overlayBg = $('.tile.middle .renderer .overlay').css('background-color');
+        console.log(`[home] original overlay bg: ${overlayBg}`);
+        
         this._sequenceRenderer.draw(0);
 
         let timeline = gsap.timeline({
@@ -102,56 +104,29 @@ const home = {
             y: 0,
             ease: "power4",
             stagger: 0.1,
-            duration: 0.5
-        });
-
-        $('.tile.middle .wp-block-column').each((index, element) => {
-            timeline.to(element, {
+            duration: 0.1
+        })
+        .to($('.tile.middle .wp-block-column'), {
                 opacity: 1,
                 ease: "power4",
-                duration: 0.5
-            })
-            .to($(element).find('img'), {
-                opacity: 1,
-                ease: "power4",
-                duration: 0.5
-            })
-            .to($(element).find('p .split-line'), {
-                y: 0,
-                ease: "power4",
                 stagger: 0.1,
-                duration: 0.5
-            });
-        });
-        
-        $('.tile.middle .wp-block-column').each((index, element) => {
-            timeline.to($(element).find('p .split-line'), {
-                y: 50,
-                ease: "power4",
-                stagger: 0.1,
-                duration: 0.5
-            })
-            .to($(element).find('img'), {
+                duration: 0.1
+        })
+        .to($('.tile.middle .wp-block-column'), {
                 opacity: 0,
                 ease: "power4",
-                duration: 0.5
-            })
-            .to(element, {
-                opacity: 0,
-                ease: "power4",
-                duration: 0.5
-            });
-        });
-        
-        timeline.to($('.tile.middle h2 .split-line'), {
+                duration: 0.05
+        })
+        .to($('.tile.middle h2 .split-line'), {
             y: 50,
             ease: "power4",
             stagger: 0.1,
-            duration: 0.5
+            duration: 0.1
         })
         .to($('.tile.middle .renderer .overlay'), {
             backgroundColor: 'transparent',
-            ease: 'linear'
+            ease: 'linear',
+            duration: 0.1
         })
         .to(playhead, {
             frame: 69,
@@ -160,6 +135,11 @@ const home = {
                 console.log(`[home] drawing frame ${playhead.frame}`);
                 this._sequenceRenderer.draw(playhead.frame);
             }
+        })
+        .to($('.tile.middle .renderer .overlay'), {
+            backgroundColor: '#212121',
+            ease: 'linear',
+            duration: 0.1
         })
         
         this._middleTileTimeline.add(timeline, '>');
@@ -237,15 +217,6 @@ const home = {
         });
 
         $('.tile.middle .wp-block-column').css('opacity', 0);
-        $('.tile.middle .wp-block-column img').css('opacity', 0);
-        $('.tile.middle .wp-block-column p').each((index, element) => {
-            const lines = new SplitType(element, { types: 'lines', lineClass: 'split-line' });
-            lines.lines.forEach((line) => {
-                const wrapper = $('<div/>').addClass('split-line-wrapper');
-                $(line).detach().appendTo(wrapper);
-                $(element).append(wrapper);
-            });
-        });
 
         $(window).on('loader-faded', () => this.onLoaderFaded());
     },

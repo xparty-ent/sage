@@ -3,6 +3,12 @@ footer {
     bottom: 0;
     width: 100%;
     display: flex;
-    height: var(--xp-footer-height);
-    background: #2e2e2e;
+    height: fit-content;
+    /*min-height: var(--xp-footer-height);*/
+    background: var(--wp--preset--color--accent);
+}
+
+footer .widget {
+    width: 100%;
+    height: 100%;
 }
