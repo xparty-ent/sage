@@ -13,8 +13,18 @@ const loader = {
     _loadedTicks: 0,
     _tickInterval: null,
 
+    _faded: false,
+
     _fadeIn() {
+        if(this._faded) return;
+        this._faded = true;
+
         console.log('[loader] fading...');
+
+        if(this._tickInterval) clearInterval(this._tickInterval);
+        this._tickInterval = null;
+
+
         gsap.timeline({
             onComplete: () => {
                 console.log('[loader] fading complete');
@@ -66,8 +76,10 @@ const loader = {
         if(this._loadedTicks >= MAX_LOAD_TICKS) {
             if(this._tickInterval) clearInterval(this._tickInterval);
             this._tickInterval = null;
+            return;
         }
-        console.log(`[loader] marked ${this._loadedTicks} ticks as loaded`);
+        
+        console.log(`[loader] marked ${this._loadedTicks} / ${MAX_LOAD_TICKS} ticks as loaded`);
     },
 
     _onWindowLoad() {
@@ -84,6 +96,8 @@ const loader = {
         if(this._loadedItems > this._items) return;
         this._loadedItems++;
         this._refreshBar();
+
+        console.log(`[loader] marked ${this._loadedItems} / ${this._items} items as loaded`);
     },
 
     registerItems(count) {

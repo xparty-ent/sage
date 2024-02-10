@@ -7,6 +7,10 @@
 @endsection
 
 @push('post-app-script')
+<script src="https://www.google.com/recaptcha/api.js"></script>
+@endpush
+
+@push('post-app-script')
 <script>
 (function() {
     window.home = window.home || {};

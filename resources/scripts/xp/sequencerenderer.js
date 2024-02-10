@@ -178,6 +178,10 @@ class sequencerenderer extends EventTarget  {
         return nearest;
     }
 
+    getCurrentIndex() {
+        return this.currentIndex;
+    }
+
     draw(index) {
         index = this._findNearestLoadedIndex(index);
 

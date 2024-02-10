@@ -5,13 +5,17 @@ import SplitType from 'split-type'
 import domReady from '@roots/sage/client/dom-ready';
 import xp from '@scripts/xp';
 import loader from '@scripts/loader';
+import axios from 'axios';
 
 const home = {
+    _CRMUrl: "https://script.google.com/macros/s/AKfycbza4mWbsR_7rqyMWoLkpM7oTCZ76rNI22qMMd9Yh5dUskq8IgpRMumvdHdMZX_NebmGGw/exec",
+
     _scrollMarkers: true,
     _sequenceRenderer: null,
 
-    _mainTileTimeline: gsap.timeline(),
-    _middleTileTimeline: gsap.timeline(),
+    _mainTileTimeline: null,
+    _middleTileTimeline: null,
+    _lastTileTimeline: null,
 
     _onImageLoading(e) {
         const { imageIndex, loadProgress } = e.detail;
@@ -24,12 +28,14 @@ const home = {
         const { loadedImages, imagesCount, imageIndex } = e.detail; 
         const loadedPercentage = Math.floor(loadedImages / imagesCount * 100);
         loader.markItemLoaded();
+        
+        if(!imageIndex) {
+            this._sequenceRenderer.draw(0);
+            console.log(`[home] drawn first frame, renderer ready`);
+        }
 
         console.log(`[home] loaded frame ${imageIndex}, loaded ${loadedImages}/${imagesCount} images, progress: ${loadedPercentage}%`);
-        
-        if(imageIndex == 0) {
-            this._createRendererTimeline()
-        }
+
     },
 
     _onSequenceImagesLoaded() {
@@ -59,38 +65,24 @@ const home = {
     },
 
     
-    _createRendererTimeline() {
-        const tile = $('.tile.main');
-        
-
+    _createMiddleTileTimeline() {
         const playhead = { 
             frame: 0 
         };
 
-        
-        if(tile.hasClass('has-base-background-color')) {
-            tile.css('background-color', '#e0e0e0');
-            tile.removeClass('has-base-background-color');
-        }
+        let currentProgress = 0;
 
-        $('.tile .fade-in').each((index, element) => {
-            if($(element).hasClass('has-accent-color')) {
-                $(element).css('color', '#212121');
-                $(element).removeClass('has-accent-color');
-            }
+        let printProgress = (type, progress) => {
+            let current = currentProgress;
+            let newProgress = Math.floor(progress * 100);
 
-            if($(element).hasClass('has-contrast-background-color')) {
-                $(element).css('background-color', '#bdbdbd');
-                $(element).removeClass('has-contrast-background-color');
-            }
-        });
-        
-        const overlayBg = $('.tile.middle .renderer .overlay').css('background-color');
-        console.log(`[home] original overlay bg: ${overlayBg}`);
-        
-        this._sequenceRenderer.draw(0);
+            if(current === newProgress) return;
+            currentProgress = newProgress;
 
-        let timeline = gsap.timeline({
+            console.log(`[home] [middle-tile] updated ${type} tween progress to ${newProgress} / 100`);
+        } 
+
+        this._middleTileTimeline = gsap.timeline({
             scrollTrigger: {
                 start: "top top+=44",
                 trigger: '.tile.middle',
@@ -104,50 +96,89 @@ const home = {
             y: 0,
             ease: "power4",
             stagger: 0.1,
-            duration: 0.1
+            duration: 0.1,
+            onUpdate: function() {
+                printProgress('h2 split line appear', this.progress());
+            }
         })
         .to($('.tile.middle .wp-block-column'), {
                 opacity: 1,
                 ease: "power4",
                 stagger: 0.1,
-                duration: 0.1
+                duration: 0.1,
+                onUpdate: function() {
+                    printProgress('info block appear', this.progress());
+                }
         })
         .to($('.tile.middle .wp-block-column'), {
                 opacity: 0,
                 ease: "power4",
-                duration: 0.05
+                duration: 0.05,
+                onUpdate: function() {
+                    printProgress('info block disappear', this.progress());
+                }
         })
         .to($('.tile.middle h2 .split-line'), {
             y: 50,
             ease: "power4",
             stagger: 0.1,
-            duration: 0.1
+            duration: 0.1,
+            onUpdate: function() {
+                printProgress('h2 split line disappear', this.progress());
+            }
         })
         .to($('.tile.middle .renderer .overlay'), {
-            backgroundColor: 'transparent',
+            opacity: 0,
             ease: 'linear',
-            duration: 0.1
+            duration: 0.1,
+            onUpdate: function() {
+                printProgress('renderer overlay disappear', this.progress());
+                $('.tile.middle .renderer .overlay').css('opacity', 1 - this.progress());
+            }
         })
         .to(playhead, {
             frame: 69,
             ease: 'linear',
             onUpdate: () => {
-                console.log(`[home] drawing frame ${playhead.frame}`);
-                this._sequenceRenderer.draw(playhead.frame);
+                const newIndex = Math.floor(playhead.frame);
+                const currentIndex = this._sequenceRenderer.getCurrentIndex();
+
+                if(newIndex === currentIndex) return;
+
+                console.log(`[home] drawing middle tile frame ${currentIndex} -> ${newIndex}`);
+                this._sequenceRenderer.draw(newIndex);
             }
         })
         .to($('.tile.middle .renderer .overlay'), {
-            backgroundColor: '#212121',
+            opacity: 1,
             ease: 'linear',
-            duration: 0.1
-        })
-        
-        this._middleTileTimeline.add(timeline, '>');
-
-
+            duration: 0.1,
+            onUpdate: function() {
+                printProgress('renderer overlay appear', this.progress());
+                $('.tile.middle .renderer .overlay').css('opacity', this.progress());
+            }
+        });
     },
 
-    createMainTileTimeline() {
+    _createLastTileTimeline() {
+        this._lastTileTimeline = gsap.timeline()
+            .to($('.tile.last .wp-block-cover span'), {
+                opacity: 0.65,
+                duration: 0.1,
+                scrollTrigger: {
+                    start: "top top+=44",
+                    trigger: '.tile.last',
+                    markers: this._scrollMarkers ? {startColor: "green", endColor: "green" } : false,
+                    pin: true,
+                    end: "bottom top",
+                    scrub: true,
+                }
+            });
+    },
+
+    _createMainTileTimeline() {
+        this._mainTileTimeline = gsap.timeline();
+
         this._mainTileTimeline.to($('.tile.main .wp-block-cover div[role="img"]'), {
             scale: '1.0',
             ease: 'power4',
@@ -173,6 +204,7 @@ const home = {
             ease: "power4"
         });
 
+        /*
         this._mainTileTimeline.to($('.tile.main .wp-block-cover div[role="img"]'), {
             backgroundPosition: "50% 0%",
             ease: "none",
@@ -184,17 +216,35 @@ const home = {
                 scrub: false,
             }, 
         });
+        */
 
         this._mainTileTimeline.pause();
     },
 
-    onLoaderFaded() {
+    _onLoaderFaded() {
         window.scrollTo(0, 0);
         this._mainTileTimeline.play();
         $('.tile.middle .renderer .overlay').css('background-color', $('.tile.middle').css('background-color'));
     },
 
-    prepareElements() {
+    _prepareElements() {
+        if($('.tile.main').hasClass('has-base-background-color')) {
+            $('.tile.main').css('background-color', '#e0e0e0');
+            $('.tile.main').removeClass('has-base-background-color');
+        }
+
+        $('.tile .fade-in').each((index, element) => {
+            if($(element).hasClass('has-accent-color')) {
+                $(element).css('color', '#212121');
+                $(element).removeClass('has-accent-color');
+            }
+
+            if($(element).hasClass('has-contrast-background-color')) {
+                $(element).css('background-color', '#bdbdbd');
+                $(element).removeClass('has-contrast-background-color');
+            }
+        });
+
         $('.tile.main .wp-block-cover div[role="img"]').css('transform', 'scale(1.5)');
         $('.tile.main .wp-block-cover .scroll').css('opacity', 0);
         
@@ -218,17 +268,52 @@ const home = {
 
         $('.tile.middle .wp-block-column').css('opacity', 0);
 
-        $(window).on('loader-faded', () => this.onLoaderFaded());
+        $('.tile.last .wp-block-cover span').css('opacity', 1);
+
+        $(window).on('loader-faded', () => this._onLoaderFaded());
+    },
+
+    _prepareCRMForm() {
+        console.log('[home] preparing CRM form...');
+        axios.get(this._CRMUrl)
+            .then(response => {
+                if(!response.data.success) {
+                    console.error('[home] failed to load CRM info!');
+                    return;
+                }
+                console.log(`[home] retrieved CRM reCAPTCHA key: ${response.data.recaptcha_site_key}`);
+                console.log(`[home] retrieved CRM reCAPTCHA script url: ${response.data.recaptcha_js_script_url}`);
+                console.log(`[home] retrieved CRM reCAPTCHA snippet: ${response.data.recaptcha_js_script_snippet}`);
+
+                console.log(`[home] creating reCAPTCHA script element...`);
+                var script = $('<script/>', {
+                    id: 'recaptcha-script',
+                    src: response.data.recaptcha_js_script_url
+                });
+
+                console.log("[home] appending reCAPTCHA script element...");
+                $('body').append(script);
+                
+                console.log("[home] reCAPTCHA script element appended");
+
+            })
+            .catch(() => {
+                console.error('[home] failed to load CRM info!');
+            });
     },
 
     register() {
         console.log("[home] registering home...")
         gsap.registerPlugin(ScrollTrigger);
         gsap.registerPlugin(TextPlugin);
-        this.prepareElements();
-        this.createMainTileTimeline();
-
+        this._prepareCRMForm();
+        this._prepareElements();
         this._createSequenceRenderer();
+
+        this._createMainTileTimeline();
+        this._createMiddleTileTimeline();
+        this._createLastTileTimeline();
+
     }
 };
 
