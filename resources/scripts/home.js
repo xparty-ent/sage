@@ -8,7 +8,7 @@ import loader from '@scripts/loader';
 import axios from 'axios';
 
 const home = {
-    _CRMUrl: "https://script.google.com/macros/s/AKfycbza4mWbsR_7rqyMWoLkpM7oTCZ76rNI22qMMd9Yh5dUskq8IgpRMumvdHdMZX_NebmGGw/exec",
+    _CRMDeploymentID: "AKfycbza4mWbsR_7rqyMWoLkpM7oTCZ76rNI22qMMd9Yh5dUskq8IgpRMumvdHdMZX_NebmGGw",
 
     _scrollMarkers: true,
     _sequenceRenderer: null,
@@ -90,8 +90,16 @@ const home = {
                 pin: true,
                 end: "bottom+=10000 top",
                 scrub: true,
+                snap: {
+                    snapTo: "labelsDirectional",
+                    directional: true,
+                    duration: { min: 1, max: 3 },
+                    delay: 0,
+                    ease: "power1.inOut",
+                  },
             }
         })
+        .addLabel("start", ">")
         .to($('.tile.middle h2 .split-line'), {
             y: 0,
             ease: "power4",
@@ -110,6 +118,7 @@ const home = {
                     printProgress('info block appear', this.progress());
                 }
         })
+        .addLabel("stage-1", ">")
         .to($('.tile.middle .wp-block-column'), {
                 opacity: 0,
                 ease: "power4",
@@ -157,7 +166,8 @@ const home = {
                 printProgress('renderer overlay appear', this.progress());
                 $('.tile.middle .renderer .overlay').css('opacity', this.progress());
             }
-        });
+        })
+        .addLabel("stage-2", ">");
     },
 
     _createLastTileTimeline() {
@@ -275,7 +285,7 @@ const home = {
 
     _prepareCRMForm() {
         console.log('[home] preparing CRM form...');
-        axios.get(this._CRMUrl)
+        axios.get(`https://script.google.com/macros/s/${this._CRMDeploymentID}/exec`)
             .then(response => {
                 if(!response.data.success) {
                     console.error('[home] failed to load CRM info!');
@@ -295,6 +305,9 @@ const home = {
                 $('body').append(script);
                 
                 console.log("[home] reCAPTCHA script element appended");
+
+                console.log("[home] appending CRM form...");
+                $('.crm-placeholder').append(response.data.form_html);
 
             })
             .catch(() => {

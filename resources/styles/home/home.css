@@ -41,14 +41,6 @@
     height: calc(100vh - var(--xp-header-height));
 }
 
-.home-container .tile.middle {
-    /*margin-top: var(--xp-header-height);*/
-}
-
-.home-container .tile.last {
-    /*height: calc(100vh - var(--xp-header-height) - var(--xp-footer-height));*/
-}
-
 .home-container .main-headline {
     position: absolute;
     top: 50%;
@@ -92,6 +84,27 @@
     overflow: hidden;
 }
 
+/* tile split line effect */
 .split-line {
     transform: translate(0px, 50px);
+}
+
+/* last tile crm form styling */
+.crm-form-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* last tile crm form inputs styling */
+.crm-form-container input, .crm-form-container textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid white;
+    text-align: center;
+    font-family: 'tstar';
+    font-size: large;
 }
