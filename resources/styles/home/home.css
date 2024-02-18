@@ -90,7 +90,7 @@
 }
 
 /* last tile crm form styling */
-.crm-form-container {
+.crm-form-container, .crm-form-container form {
     display: flex;
     flex-direction: column;
     align-content: center;

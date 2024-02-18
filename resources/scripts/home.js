@@ -8,7 +8,7 @@ import loader from '@scripts/loader';
 import axios from 'axios';
 
 const home = {
-    _CRMDeploymentID: "AKfycbza4mWbsR_7rqyMWoLkpM7oTCZ76rNI22qMMd9Yh5dUskq8IgpRMumvdHdMZX_NebmGGw",
+    //_CRMDeploymentID: "AKfycbza4mWbsR_7rqyMWoLkpM7oTCZ76rNI22qMMd9Yh5dUskq8IgpRMumvdHdMZX_NebmGGw",
 
     _scrollMarkers: true,
     _sequenceRenderer: null,
@@ -100,7 +100,7 @@ const home = {
             }
         })
         .addLabel("start", ">")
-        .to($('.tile.middle h2 .split-line'), {
+        /*.to($('.tile.middle h2 .split-line'), {
             y: 0,
             ease: "power4",
             stagger: 0.1,
@@ -112,7 +112,6 @@ const home = {
         .to($('.tile.middle .wp-block-column'), {
                 opacity: 1,
                 ease: "power4",
-                stagger: 0.1,
                 duration: 0.1,
                 onUpdate: function() {
                     printProgress('info block appear', this.progress());
@@ -144,6 +143,16 @@ const home = {
                 printProgress('renderer overlay disappear', this.progress());
                 $('.tile.middle .renderer .overlay').css('opacity', 1 - this.progress());
             }
+        })*/
+        
+        .to($('.tile.middle .renderer .overlay'), {
+            opacity: 0,
+            ease: 'linear',
+            duration: 0.1,
+            onUpdate: function() {
+                printProgress('renderer overlay disappear', this.progress());
+                $('.tile.middle .renderer .overlay').css('opacity', 1 - this.progress());
+            }
         })
         .to(playhead, {
             frame: 69,
@@ -163,11 +172,29 @@ const home = {
             ease: 'linear',
             duration: 0.1,
             onUpdate: function() {
-                printProgress('renderer overlay appear', this.progress());
+                printProgress('renderer overlay disappear', this.progress());
                 $('.tile.middle .renderer .overlay').css('opacity', this.progress());
             }
         })
-        .addLabel("stage-2", ">");
+        .addLabel("stage-2", ">")
+        .to($('.tile.middle h2 .split-line'), {
+            y: 0,
+            ease: "power4",
+            stagger: 0.1,
+            duration: 0.1,
+            onUpdate: function() {
+                printProgress('h2 split line appear', this.progress());
+            }
+        })
+        .to($('.tile.middle .wp-block-column'), {
+                opacity: 1,
+                ease: "power4",
+                duration: 0.1,
+                onUpdate: function() {
+                    printProgress('info block appear', this.progress());
+                }
+        })
+        .addLabel("stage-3", ">");
     },
 
     _createLastTileTimeline() {
@@ -283,7 +310,7 @@ const home = {
         $(window).on('loader-faded', () => this._onLoaderFaded());
     },
 
-    _prepareCRMForm() {
+    /*_prepareCRMForm() {
         console.log('[home] preparing CRM form...');
         axios.get(`https://script.google.com/macros/s/${this._CRMDeploymentID}/exec`)
             .then(response => {
@@ -313,13 +340,13 @@ const home = {
             .catch(() => {
                 console.error('[home] failed to load CRM info!');
             });
-    },
+    },*/
 
     register() {
         console.log("[home] registering home...")
         gsap.registerPlugin(ScrollTrigger);
         gsap.registerPlugin(TextPlugin);
-        this._prepareCRMForm();
+       // this._prepareCRMForm();
         this._prepareElements();
         this._createSequenceRenderer();
 

@@ -19,10 +19,10 @@ window.xp = xp;
 /**
  * custom libraries
  */
+loader.register();
 domReady(() => {
     xp.register();
     header.register();
     mouse.register();
-    loader.register();
     animations.register();
 });
