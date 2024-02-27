@@ -54,7 +54,7 @@ const loader = {
 
     _refreshBar() {
         const perc = Math.min(100, ((this._loadedItems + this._loadedTicks) / (this._items + MAX_LOAD_TICKS)) * 100);
-        if(perc >= 99) this._fadeIn();
+        if(perc >= 99 && this._minLoadElapsed) this._fadeIn();
         
         gsap.to(this._bar, {
             width: `${perc}%`,
