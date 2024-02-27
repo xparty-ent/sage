@@ -4,14 +4,10 @@
  * Theme menus.
  */
 
-// Guest primary navigation
 register_nav_menus([
-    'guest_primary_navigation' => __('Guest Primary Navigation', 'sage'),
-]);
-
-// User primary navigation
-register_nav_menus([
-    'user_primary_navigation' => __('User Primary Navigation', 'sage'),
+    'user_primary_navigation' => __('User Primary Navigation', 'sage'),     // User primary navigation
+    'guest_primary_navigation' => __('Guest Primary Navigation', 'sage'),   // Guest primary navigation
+    'footer_primary_navigation' => __('Footer Primary Navigation', 'sage'), // Footer primary navigation
 ]);
 
  function add_user_menu_items($menu_objects, $args) {

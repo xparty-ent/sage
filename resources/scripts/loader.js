@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 
 const MAX_LOAD_TICKS = 100;
+const MIN_LOADING_DURATION = 1000;
 const loader = {
     _bar: null,
     _label: null,
@@ -12,6 +13,8 @@ const loader = {
 
     _loadedTicks: 0,
     _tickInterval: null,
+
+    _minLoadElapsed: false,
 
     _faded: false,
 
@@ -64,7 +67,7 @@ const loader = {
                 this._label.text(`${Math.floor(progress)}%`);
             },
             onComplete: () => {
-                if(perc < 99) return;
+                if(perc < 99 || !this._minLoadElapsed) return;
                 this._fadeIn();
             }
         });
@@ -111,6 +114,8 @@ const loader = {
         $(window).on('load', () => this._onWindowLoad());
 
         this._tickInterval = setInterval(() => this._onLoadTick(), 150);
+        setTimeout(() => this._minLoadElapsed = true, MIN_LOADING_DURATION);
+        
         
         console.log('[loader] loader registered');
     }
