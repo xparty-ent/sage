@@ -10,7 +10,7 @@ import axios from 'axios';
 const home = {
     //_CRMDeploymentID: "AKfycbza4mWbsR_7rqyMWoLkpM7oTCZ76rNI22qMMd9Yh5dUskq8IgpRMumvdHdMZX_NebmGGw",
 
-    _scrollMarkers: true,
+    _scrollMarkers: false,
     _sequenceRenderer: null,
 
     _mainTileTimeline: null,

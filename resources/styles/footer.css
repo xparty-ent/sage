@@ -12,3 +12,26 @@ footer .widget {
     width: 100%;
     height: 100%;
 }
+
+footer .widgettitle {
+    display: none;
+}
+
+footer #menu-footer li {
+    list-style-type: none;
+}
+
+footer #menu-footer {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 70px;
+    padding-left: 0;
+}
+
+footer #menu-footer .sub-menu {
+    padding-inline-start: 0px !important;
+}
