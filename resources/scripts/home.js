@@ -89,7 +89,6 @@ const home = {
                 markers: this._scrollMarkers ? {startColor: "red", endColor: "red" } : false,
                 pin: true,
                 end: "bottom+=10000 top",
-                scrub: true,
                 snap: {
                     snapTo: "labelsDirectional",
                     directional: true,
@@ -100,55 +99,10 @@ const home = {
             }
         })
         .addLabel("start", ">")
-        /*.to($('.tile.middle h2 .split-line'), {
-            y: 0,
-            ease: "power4",
-            stagger: 0.1,
-            duration: 0.1,
-            onUpdate: function() {
-                printProgress('h2 split line appear', this.progress());
-            }
-        })
-        .to($('.tile.middle .wp-block-column'), {
-                opacity: 1,
-                ease: "power4",
-                duration: 0.1,
-                onUpdate: function() {
-                    printProgress('info block appear', this.progress());
-                }
-        })
-        .addLabel("stage-1", ">")
-        .to($('.tile.middle .wp-block-column'), {
-                opacity: 0,
-                ease: "power4",
-                duration: 0.05,
-                onUpdate: function() {
-                    printProgress('info block disappear', this.progress());
-                }
-        })
-        .to($('.tile.middle h2 .split-line'), {
-            y: 50,
-            ease: "power4",
-            stagger: 0.1,
-            duration: 0.1,
-            onUpdate: function() {
-                printProgress('h2 split line disappear', this.progress());
-            }
-        })
         .to($('.tile.middle .renderer .overlay'), {
             opacity: 0,
             ease: 'linear',
-            duration: 0.1,
-            onUpdate: function() {
-                printProgress('renderer overlay disappear', this.progress());
-                $('.tile.middle .renderer .overlay').css('opacity', 1 - this.progress());
-            }
-        })*/
-        
-        .to($('.tile.middle .renderer .overlay'), {
-            opacity: 0,
-            ease: 'linear',
-            duration: 0.1,
+            duration: 0.025,
             onUpdate: function() {
                 printProgress('renderer overlay disappear', this.progress());
                 $('.tile.middle .renderer .overlay').css('opacity', 1 - this.progress());
@@ -157,6 +111,7 @@ const home = {
         .to(playhead, {
             frame: 69,
             ease: 'linear',
+            duration: 10,
             onUpdate: () => {
                 const newIndex = Math.floor(playhead.frame);
                 const currentIndex = this._sequenceRenderer.getCurrentIndex();
@@ -168,7 +123,7 @@ const home = {
             }
         })
         .to($('.tile.middle .renderer .overlay'), {
-            opacity: 1,
+            opacity: 0.025,
             ease: 'linear',
             duration: 0.1,
             onUpdate: function() {
