@@ -114,7 +114,10 @@ const loader = {
         $(window).on('load', () => this._onWindowLoad());
 
         this._tickInterval = setInterval(() => this._onLoadTick(), 150);
-        setTimeout(() => this._minLoadElapsed = true, MIN_LOADING_DURATION);
+        setTimeout(() => {
+            this._minLoadElapsed = true;
+            this._refreshBar();
+        }, MIN_LOADING_DURATION);
         
         
         console.log('[loader] loader registered');
