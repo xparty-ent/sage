@@ -102,8 +102,6 @@ class sequencerenderer extends EventTarget  {
         });
     }
 
-    _imageAjax
-
     _loadImage(index) {
         return new Promise((resolve, reject) => {
             const name = zeroPad(index, this.manifest.frames.digits);
@@ -180,6 +178,10 @@ class sequencerenderer extends EventTarget  {
 
     getCurrentIndex() {
         return this.currentIndex;
+    }
+
+    getImagesCount() {
+        return this.images.length;
     }
 
     draw(index) {

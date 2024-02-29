@@ -124,8 +124,9 @@ const home = {
 
                 console.log(`[home] drawing middle tile frame ${currentIndex} -> ${newIndex}`);
                 this._sequenceRenderer.draw(newIndex);
+                const progress = playhead.frame / 69;
                 gsap.to($('.tile.middle .renderer .bar'), {
-                    width: `${Math.floor(this.progress() * 100)}%`
+                    width: `${Math.floor(progress * 100)}%`
                 });
             }
         })
