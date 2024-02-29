@@ -124,6 +124,9 @@ const home = {
 
                 console.log(`[home] drawing middle tile frame ${currentIndex} -> ${newIndex}`);
                 this._sequenceRenderer.draw(newIndex);
+                gsap.to($('.tile.middle .renderer .bar'), {
+                    width: `${Math.floor(this.progress() * 100)}%`
+                });
             }
         })
         .to($('.tile.middle .renderer .overlay'), {
