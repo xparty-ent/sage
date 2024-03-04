@@ -161,12 +161,14 @@ nav.nav-primary .nav a {
         top: var(--xp-header-height);
         opacity: 0;
         z-index: 1;
+        pointer-events: none;
         transition: opacity 0.5s ease-in, width 0.5s ease-in;
     }
 
     header.banner.active nav.nav-primary:before {
         width: calc(100vw - 70vw);
         opacity: 1;
+        pointer-events: all;
     }
     
     nav.nav-primary .nav {
