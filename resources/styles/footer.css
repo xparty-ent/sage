@@ -28,7 +28,7 @@ footer #menu-footer {
     align-items: flex-start;
     flex-wrap: wrap;
     flex-direction: row;
-    gap: 70px;
+    gap: 25px;
     padding-left: 0;
 }
 
