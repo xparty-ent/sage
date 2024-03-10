@@ -54,7 +54,7 @@ if (! function_exists('\Roots\bootloader')) {
 |
 */
 
-collect(['setup', 'filters', 'routes', 'menus', 'pages', 'update'])
+collect(['setup', 'filters', 'routes', 'menus', 'pages', 'update', 'shortcodes'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

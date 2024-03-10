@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import SplitType from 'split-type'
 import domReady from '@roots/sage/client/dom-ready';
 import xp from '@scripts/xp';
@@ -90,19 +91,16 @@ const home = {
                 pin: true,
                 end: "bottom+=3000 top",
                 preventOverlaps: false,
-                scrub: true
-                /*
+                scrub: true,
                 snap: {
                     snapTo: "labelsDirectional",
                     directional: true,
-                    duration: { min: 1, max: 3 },
+                    duration: 5,
                     delay: 0,
                     ease: "power1.inOut",
                   },
-                */
             }
         })
-        .addLabel("start", ">")
         .to($('.tile.middle .renderer .overlay'), {
             opacity: 0,
             ease: 'linear',
@@ -139,8 +137,6 @@ const home = {
                 $('.tile.middle .renderer .overlay').css('opacity', this.progress());
             }
         })
-
-        .addLabel("stage-2", ">")
         .to($('.tile.middle h2 .split-line'), {
             y: 0,
             ease: "power4",
@@ -158,7 +154,7 @@ const home = {
                     printProgress('info block appear', this.progress());
                 }
         })
-        .addLabel("stage-3", ">");
+        .addLabel("finish", ">");
     },
 
     _createLastTileTimeline() {
@@ -271,6 +267,13 @@ const home = {
 
         $('.tile.last .wp-block-cover span').css('opacity', 1);
 
+        $('.tile.main .scroll').on('click', () => {
+            gsap.to(window, {
+                scrollTo: '.tile.middle',
+                duration: 1.5
+            });
+        });
+
         $(window).on('loader-faded', () => this._onLoaderFaded());
     },
 
@@ -310,6 +313,7 @@ const home = {
         console.log("[home] registering home...")
         gsap.registerPlugin(ScrollTrigger);
         gsap.registerPlugin(TextPlugin);
+        gsap.registerPlugin(ScrollToPlugin);
        // this._prepareCRMForm();
         this._prepareElements();
         this._createSequenceRenderer();
@@ -318,6 +322,7 @@ const home = {
         this._createMiddleTileTimeline();
         this._createLastTileTimeline();
 
+        window.gsap = gsap;
     }
 };
 
