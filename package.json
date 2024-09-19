@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "@img/sharp-linux-x64": "^0.33.1",
-    "@roots/bud": "^6.20.0",
-    "@roots/bud-imagemin": "^6.20.0",
-    "@roots/sage": "^6.20.0"
+    "@roots/bud": "^6.23.3",
+    "@roots/bud-imagemin": "^6.23.3",
+    "@roots/sage": "^6.23.3"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.34",
